@@ -1,0 +1,24 @@
+@using RIP_lab01.Models
+@model List<RIP_lab01.Models.UniversityDivisions>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<form method="get" action="/Home/Index" class="search-form">
+    <div class="search-icon"></div>
+    <input type="text" size="40" name="search" class="search-line">
+    <button type="submit" class="search-btn">󰌑</button>
+</form>
+
+@foreach (UniversityDivisions div in Model)
+{
+    <div class="struct-block">
+        <h2>@div.StructName</h2>
+        <img src="/@div.ImgUrl" alt="@div.ImgUrl" height="100"/>
+        <div>Сотрудников: @div.Persons.Count</div>
+        <a href="/Home/index/@div.Id.ToString()">подробнее..</a>
+    </div>
+    
+}

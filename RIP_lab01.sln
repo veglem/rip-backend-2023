@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RIP_lab01", "RIP_lab01\RIP_lab01.csproj", "{D468AB38-012D-4954-8FD8-8DDC56EB62F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BmstuSiteParser", "BmstuSiteParser\BmstuSiteParser.csproj", "{A6D3A215-CEE7-435D-B454-B27B8AE275D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D468AB38-012D-4954-8FD8-8DDC56EB62F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D468AB38-012D-4954-8FD8-8DDC56EB62F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D468AB38-012D-4954-8FD8-8DDC56EB62F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D468AB38-012D-4954-8FD8-8DDC56EB62F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6D3A215-CEE7-435D-B454-B27B8AE275D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6D3A215-CEE7-435D-B454-B27B8AE275D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6D3A215-CEE7-435D-B454-B27B8AE275D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6D3A215-CEE7-435D-B454-B27B8AE275D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

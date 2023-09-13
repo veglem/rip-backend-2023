@@ -1,0 +1,31 @@
+@model RIP_lab01.Models.UniversityDivisions
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@* <a href="/">Назад</a> *@
+
+<div class="struct-block">
+    
+    
+
+    <h2 class="struct-name">@Model.StructName</h2>
+    
+    <img src="/@Model.ImgUrl" alt="@Model.ImgUrl" height="400" class="imgs"/>
+    
+    @foreach (var person in Model.Persons)
+    {
+        <div class="info-block">
+            <h3>@person.Division</h3>
+            <div>@person.FIO</div>
+            <div>@person.Position</div>
+            <div>@person.Number</div>
+            <div>@person.Email</div>
+            <div>@person.Cabinet</div>
+            <div>@person.Location</div>
+        </div>
+    }
+
+</div>

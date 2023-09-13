@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "iPMlh+PHy70OmpTkH0iZbOC/up0i3iDJdaUyQ9w6ckn5giX4C+7yDSnjKu5NAj4epXM6skmxkWuyv4Wxa3UbFA==",
+  "success": true,
+  "projectFilePath": "/Users/vzhur/RiderProjects/RIP_lab01/RIP_lab01/RIP_lab01.csproj",
+  "expectedPackageFiles": [
+    "/Users/vzhur/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

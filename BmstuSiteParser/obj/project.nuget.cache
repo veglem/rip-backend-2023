@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "CvUVhbujq73UpaXljCDdWerj91oFKKHOCGreT+2iCgeKg5/uYlx2QwUyy4JIDDHw1ZaM84qpFqgmIVbXn/6FkQ==",
+  "success": true,
+  "projectFilePath": "/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/BmstuSiteParser.csproj",
+  "expectedPackageFiles": [
+    "/Users/vzhur/.nuget/packages/htmlagilitypack/1.11.53/htmlagilitypack.1.11.53.nupkg.sha512",
+    "/Users/vzhur/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/RIP_lab01.props" />
+</Project>
