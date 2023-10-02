@@ -133,3 +133,12 @@ a{
     margin-left: auto;
     margin-right: auto;
 }
+
+.delete-form{
+    top: 25px;
+    float: right;
+    position: relative;
+    .delete-btn{
+        border-radius: 3px;
+    }
+}

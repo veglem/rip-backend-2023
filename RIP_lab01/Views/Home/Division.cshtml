@@ -1,4 +1,4 @@
-@model RIP_lab01.Models.UniversityDivisions
+@model RIP_lab01.UnivesityUnit
 
 @{
     ViewBag.Title = "title";
@@ -11,15 +11,15 @@
     
     
 
-    <h2 class="struct-name">@Model.StructName</h2>
+    <h2 class="struct-name">@Model.Name</h2>
     
     <img src="/@Model.ImgUrl" alt="@Model.ImgUrl" height="400" class="imgs"/>
     
-    @foreach (var person in Model.Persons)
+    @foreach (var person in Model.UniversityEmployees)
     {
         <div class="info-block">
             <h3>@person.Division</h3>
-            <div>@person.FIO</div>
+            <div>@person.FullName</div>
             <div>@person.Position</div>
             <div>@person.Number</div>
             <div>@person.Email</div>

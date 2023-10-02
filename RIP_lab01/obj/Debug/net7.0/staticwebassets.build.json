@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "uAoaQiYmHudfX3ZCD6g43XwCcxqZ1KnO0mlTS1PMV50=",
+  "Hash": "J/vbOE7HaueWY3uAFZ2er9Keza/RxRaaGvFIXuBXz3g=",
   "Source": "RIP_lab01",
   "BasePath": "_content/RIP_lab01",
   "Mode": "Default",
@@ -32,6 +32,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/.DS_Store"
+    },
+    {
+      "Identity": "/Users/vzhur/RiderProjects/RIP_lab01/RIP_lab01/wwwroot/imgs/.DS_Store",
+      "SourceId": "RIP_lab01",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/vzhur/RiderProjects/RIP_lab01/RIP_lab01/wwwroot/",
+      "BasePath": "_content/RIP_lab01",
+      "RelativePath": "imgs/.DS_Store",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/imgs/.DS_Store"
     },
     {
       "Identity": "/Users/vzhur/RiderProjects/RIP_lab01/RIP_lab01/wwwroot/imgs/cafedra.png",

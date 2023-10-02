@@ -1,44 +1,62 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RIP_lab01.Database;
 using RIP_lab01.Models;
 
 namespace RIP_lab01.Controllers;
 
+[Route("page")]
 public class HomeController : Controller
 {
-    // GET
-    
-    public IActionResult Index(string? id)
+    /// <summary>
+    /// Создание продукта
+    /// </summary>
+    /// <param name="model">Продукт</param>
+    /// <returns></returns>
+    [HttpGet("{id?}")]
+    public IActionResult Index(int? id)
     {
+        RectorOrdersDatabaseContext db = new RectorOrdersDatabaseContext();
         
         //нет конкретного id
         if (id is null)
         {
-            List<UniversityDivisions>? divisionsList;
+            
+            List<UnivesityUnit>? univesityUnits;
             
             // поиск
             if (HttpContext.Request.Query.Keys.Contains("search"))
             {
-                divisionsList = JsonDB.AsyncRead().Result?.
-                    FindAll(divisions => divisions.StructName.ToLower().
-                        Contains(HttpContext.Request.Query["search"].ToString().ToLower()));
+                univesityUnits = db.UnivesityUnits.Include(u => u.UniversityEmployees).Where(unit =>
+                    unit.Name.ToLower().Contains(HttpContext.Request
+                        .Query["search"].ToString().ToLower()) && !unit.IsDeleted).ToList();
+                    
+                
             }
             // вся база
             else
             {
-                divisionsList = JsonDB.AsyncRead().Result;
+                univesityUnits = db.UnivesityUnits.Include(u => u.UniversityEmployees)
+                    .Where(unit => !unit.IsDeleted).ToList();
             }
             
             
-            return View(divisionsList);
+            return View(univesityUnits);
         }
         
         // поиск по id
-        UniversityDivisions div = JsonDB.AsyncRead().Result?.
-            Find(divisions => divisions.Id.ToString() == id) 
-                                  ?? new UniversityDivisions("null");
-        return View("Division", div);
+
+        UnivesityUnit? unit = db.UnivesityUnits.Find(id);
+        
+        if (unit is null)
+        {
+            return NotFound();
+        }
+
+        db.Entry(unit).Collection(u => u.UniversityEmployees).Load();
+        
+        return View("Division", unit);
         
 
         

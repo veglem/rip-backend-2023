@@ -53,5 +53,21 @@ public class Person
         Cabinet = cabinet;
         Location = location;
     }
+
+    public UniversityEmployee ToDbModel()
+    {
+        UniversityEmployee result = new UniversityEmployee()
+        {
+            Division = Division,
+            FullName = FIO,
+            Position = Position,
+            Number = Number,
+            Email = Email,
+            Cabinet = Cabinet,
+            Location = Location
+        };
+
+        return result;
+    }
     
 }

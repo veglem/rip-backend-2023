@@ -33,4 +33,16 @@ public class UniversityDivisions
         ImgUrl = imgUrl;
         Persons = persons;
     }
+
+    public UnivesityUnit ToDbModel()
+    {
+        UnivesityUnit result = new UnivesityUnit()
+        {
+            ImgUrl = ImgUrl, Name = StructName,
+            UniversityEmployees =
+                Persons.Select(person => person.ToDbModel()).ToList()
+        };
+
+        return result;
+    }
 }
