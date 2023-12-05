@@ -1,0 +1,25 @@
+version: "3"
+services:
+  webapi:
+    build: .
+    ports:
+      - "2023:80"
+    depends_on:
+      - "postgres"
+    volumes:
+      - ./WebApi.Host/appsettings.json:/app/appsettings.json
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "RectorOrdersDatabase"
+      POSTGRES_USER: "veglem"
+      POSTGRES_PASSWORD: "1812"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - PSQL:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  PSQL:
+    

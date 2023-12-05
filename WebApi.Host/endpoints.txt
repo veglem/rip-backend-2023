@@ -1,0 +1,18 @@
+# Набор методов для услуг
+api/units/ # GET
+api/units/{int unitId}/ # GET 
+api/units/{int unitId}/update/ # PUT 
+api/units/{int unitId}/delete/ # DELETE 
+api/units/create/ # POST
+api/units/{int unitId}/add_to_order/ # POST 
+path('api/units/{int unitId}/image/ # GET 
+path(api/units/{int unitId}/image/ # PUT
+
+# Набор методов для заявок
+api/orders/ # GET
+api/orders/{int orderId}/ # GET 
+api/orders/{int orderId}/update/ # PUT 
+api/orders/{int orderId}/update_status_user/ # PUT
+api/orders/{int orderId}/update_status_admin/ # PUT
+api/orders/{int orderId}/delete/ # DELETE
+api/orders/{int orderId}/delete_unit/{int unitId}/ # DELETE
