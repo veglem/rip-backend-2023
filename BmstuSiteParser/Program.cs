@@ -1,91 +1,110 @@
-﻿using System.Text;
-using BmstuSiteParser;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
+﻿using BmstuSiteParser;
+using Microsoft.EntityFrameworkCore;
+using RIP_lab01;
 
-HttpClient client = new HttpClient();
+RectorOrdersDatabaseContext context = new RectorOrdersDatabaseContext();
 
-var response = await client.GetAsync("http://wwv.bmstu.ru/sveden/struct/");
+List<UnivesityUnit> units = await context.UnivesityUnits.ToListAsync();
 
-var str = response.Content.ReadAsStream();
-
-HtmlDocument doc = new HtmlDocument();
-
-doc.Load(str);
-
-List<BmstuStruct> bmstuStructs = new List<BmstuStruct>();
-
-foreach (var node in doc.DocumentNode.SelectNodes(
-             "//table[@itemprop='structOrgUprav']/tbody/tr"))
+List<UnivesityUnit> unitsToAdd = new List<UnivesityUnit>()
 {
-    var x = node.SelectNodes("./td[@class='subtitle']");
-    if (node.SelectNodes("./td[@class='subtitle']") is not null)
+    new ()
     {
-        bmstuStructs.Add(new BmstuStruct()
+        Name = "Факультеты",
+        ImgUrl = "imgs/facultet.png",
+        InverseParrentUnitNavigation = new List<UnivesityUnit>()
         {
-            StructName = node.SelectNodes("./td[@class='subtitle']")[0].InnerText,
-            Persons = new List<Person>()
-        });
+            new ()
+                {
+                    Name = "ИУ",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("ИУ", 12)
+                },
+                new ()
+                {
+                    Name = "ФН",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("ФН", 12)
+                },
+                new ()
+                {
+                    Name = "Л",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("Л", 4)
+                },
+                new ()
+                {
+                    Name = "МТ",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("МТ", 13)
+                },
+                new ()
+                {
+                    Name = "ИБМ",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("ИБМ", 7)
+                },
+                new ()
+                {
+                    Name = "СМ",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("СМ", 13)
+                },
+                new ()
+                {
+                    Name = "Э",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("Э", 10)
+                },
+                new ()
+                {
+                    Name = "РЛ",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("РЛ", 6)
+                },
+                new ()
+                {
+                    Name = "БМТ",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("БМТ", 5)
+                },
+                new ()
+                {
+                    Name = "РК",
+                    ImgUrl = "imgs/facultet.png",
+                    InverseParrentUnitNavigation = Creator.CreateUU("РК", 9)
+                }
+        }
     }
+};
 
-    if (node.SelectNodes("./td[@itemprop='name']") is not null)
+foreach(UnivesityUnit unit in unitsToAdd){
+    if (units.Where(u => u.Name == unit.Name).ToList().Count == 0)
     {
-        string division =
-            node.SelectNodes("./td[@itemprop='name']")[0].InnerText == "&nbsp;"
-                ? ""
-                : node.SelectNodes("./td[@itemprop='name']")[0].InnerText;
-        string fio = 
-            node.SelectNodes("./td[@itemprop='fio']")[0].InnerText == "&nbsp;"
-                ? ""
-                : node.SelectNodes("./td[@itemprop='fio']")[0].InnerText;
-        string position = 
-            node.SelectNodes("./td[@itemprop='post']")[0].InnerText == "&nbsp;"
-                ? ""
-                : node.SelectNodes("./td[@itemprop='post']")[0].InnerText;
-        string number = 
-            node.ChildNodes[7].InnerText == "&nbsp;"
-                ? ""
-                : node.ChildNodes[7].InnerText;
-        string email = 
-            node.ChildNodes[9].InnerText == "&nbsp;"
-                ? ""
-                : node.ChildNodes[9].InnerText;
-        string cabint = 
-            node.ChildNodes[11].InnerText == "&nbsp;"
-                ? ""
-                : node.ChildNodes[11].InnerText;
-        string location = 
-            node.ChildNodes[13].InnerText == "&nbsp;"
-                ? ""
-                : node.ChildNodes[13].InnerText;
-
-        division = division.Replace("&quot;", "");
-        fio = fio.Replace("&quot;", "");
-        position = position.Replace("&quot;", "");
-        number = number.Replace("&quot;", "");
-        email = email.Replace("&quot;", "");
-        cabint = cabint.Replace("&quot;", "");
-        location = location.Replace("&quot;", "");
-        
-        bmstuStructs[^1].Persons.Add(new Person()
-        {
-            Division = division,
-            FIO = fio,
-            Position = position,
-            Number = number,
-            Email = email,
-            Cabinet = cabint,
-            Location = location
-        });
+        context.UnivesityUnits.Add(unit);
     }
-    
-    
+}
+
+foreach(UnivesityUnit unit in units){
+    if (unit.UniversityEmployees.Count == 0)
+    {
+        List<UniversityEmployee> employees = new List<UniversityEmployee>();
+        for (int i = 0; i < Random.Shared.Next(5, 20); ++i)
+        {
+            employees.Add(new UniversityEmployee()
+            {
+                FullName = Creator.GetRandomName(),
+                Number = "8-800-555-35-XX",
+                Email = $"employee{unit.Name}{i}@mail.ru",
+                Position = "Сотрудник",
+                Unit = unit
+            });
+        }
+
+        await context.UniversityEmployees.AddRangeAsync(employees);
+    }
 }
 
 
-await using FileStream fs = new FileStream("db.json", FileMode.OpenOrCreate);
-string jsonStr = JsonConvert.SerializeObject(bmstuStructs);
-byte[] buffer = Encoding.Default.GetBytes(jsonStr);
-await fs.WriteAsync(buffer, 0, buffer.Length);
+await context.SaveChangesAsync();
 
-Console.Write(str);

@@ -1,8 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RIP_lab01.Database;
-using RIP_lab01.Models;
 
 namespace RIP_lab01.Controllers;
 
@@ -13,6 +11,7 @@ public class HomeController : Controller
     /// Создание продукта
     /// </summary>
     /// <param name="model">Продукт</param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id?}")]
     public IActionResult Index(int? id)
@@ -28,16 +27,19 @@ public class HomeController : Controller
             // поиск
             if (HttpContext.Request.Query.Keys.Contains("search"))
             {
-                univesityUnits = db.UnivesityUnits.Include(u => u.UniversityEmployees).Where(unit =>
-                    unit.Name.ToLower().Contains(HttpContext.Request
-                        .Query["search"].ToString().ToLower()) && !unit.IsDeleted).ToList();
+                univesityUnits = db.UnivesityUnits
+                    .Include(u => u.UniversityEmployees)
+                    .Where(unit => unit.Name.ToLower()
+                        .Contains(HttpContext.Request.Query["search"]
+                            .ToString().ToLower()) && !unit.IsDeleted).ToList();
                     
                 
             }
             // вся база
             else
             {
-                univesityUnits = db.UnivesityUnits.Include(u => u.UniversityEmployees)
+                univesityUnits = db.UnivesityUnits
+                    .Include(u => u.UniversityEmployees)
                     .Where(unit => !unit.IsDeleted).ToList();
             }
             

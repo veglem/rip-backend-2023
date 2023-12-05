@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RIP_lab01.Database;
-using RIP_lab01.Models;
 
 namespace RIP_lab01.Controllers;
-
 
 /// <summary>
 /// 
@@ -12,28 +9,6 @@ namespace RIP_lab01.Controllers;
 [Route("[controller]")]
 public class ApiController : Controller
 {
-    // [HttpGet("dbMigrate")]
-    // public IActionResult AddDataToDb()
-    // {
-    //     List<UniversityDivisions>? divisionsList = JsonDB.AsyncRead().Result;
-    //
-    //     RectorOrdersDatabaseContext db = new RectorOrdersDatabaseContext();
-    //
-    //     if (divisionsList != null)
-    //     {
-    //         db.UnivesityUnits.AddRange(
-    //                         divisionsList.Select(divs => divs.ToDbModel()));
-    //         db.SaveChanges();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    //     
-    //
-    //     return Ok();
-    // }
-    
     /// <summary>
     /// 
     /// </summary>
@@ -41,20 +16,13 @@ public class ApiController : Controller
     [HttpGet("checkDb")]
     public async Task<ICollection<UnivesityUnit>> CheckDb()
     {
-        
         RectorOrdersDatabaseContext db = new RectorOrdersDatabaseContext();
 
 
         List<UnivesityUnit> units = db.UnivesityUnits.ToList();
 
-        List<UniversityEmployee> employees = await db.UniversityEmployees.ToListAsync();
-
-        // foreach (var unit in units)
-        // {
-        //     unit.UniversityEmployees =
-        //         employees.Where(employee => employee.UnitId == unit.Id).ToList();
-        // }
-        
+        List<UniversityEmployee> employees =
+            await db.UniversityEmployees.ToListAsync();
 
         return units;
     }
@@ -64,16 +32,15 @@ public class ApiController : Controller
     {
         RectorOrdersDatabaseContext db = new RectorOrdersDatabaseContext();
 
-        UnivesityUnit? unit = await db.UnivesityUnits.FindAsync(id);
+        int res = await db.Database.ExecuteSqlRawAsync(
+            "UPDATE \"UnivesityUnit\" SET \"IsDeleted\" = true WHERE \"Id\" = {0};", id);
 
-        if (unit is null)
+        if (res == 0)
         {
             return NotFound();
         }
 
-        unit.IsDeleted = true;
-
-        await db.SaveChangesAsync();
+        // await db.SaveChangesAsync();
 
         return Redirect("/page");
     }

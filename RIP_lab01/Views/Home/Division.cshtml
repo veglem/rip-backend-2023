@@ -13,18 +13,17 @@
 
     <h2 class="struct-name">@Model.Name</h2>
     
-    <img src="/@Model.ImgUrl" alt="@Model.ImgUrl" height="400" class="imgs"/>
+    <img src="/@Model.ImgUrl" alt="@Model.ImgUrl" width="100%" class="imgs"/>
+    
+    <div style="margin: 20px">@Model.Description</div>
     
     @foreach (var person in Model.UniversityEmployees)
     {
         <div class="info-block">
-            <h3>@person.Division</h3>
             <div>@person.FullName</div>
             <div>@person.Position</div>
             <div>@person.Number</div>
             <div>@person.Email</div>
-            <div>@person.Cabinet</div>
-            <div>@person.Location</div>
         </div>
     }
 

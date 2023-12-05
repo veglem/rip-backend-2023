@@ -92,7 +92,7 @@ body{
     margin: 20px;
     padding: 40px;
     border-radius: 40px;
-    background-color: #DAF0EE;
+    background-color: rgba(148, 209, 190, 0.6);
 }
 
 .info-block{

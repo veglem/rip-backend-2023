@@ -16,3 +16,17 @@
 /Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/obj/Debug/net7.0/BmstuSiteParser.csproj.AssemblyReference.cache
 /Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/obj/Debug/net7.0/BmstuSiteParser.csproj.CopyComplete
 /Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Relational.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Caching.Abstractions.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Caching.Memory.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.DependencyInjection.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Logging.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Options.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Microsoft.Extensions.Primitives.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Npgsql.dll
+/Users/vzhur/RiderProjects/RIP_lab01/BmstuSiteParser/bin/Debug/net7.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll

@@ -1,10 +1,32 @@
 @using RIP_lab01
-@using RIP_lab01.Models
 @model List<RIP_lab01.UnivesityUnit>
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
+
+    void PrintItems(List<UnivesityUnit> units)
+    {
+        if (units.Count == 0)
+        {
+            return;
+        }
+        foreach (var unit in units)
+        {
+            <div class="struct-block">
+                <form method="post" action="/api/page/@unit.Id/delete" class="delete-form">
+                    <button type="submit" class="delete-btn">x</button>
+                </form>
+                <h2>@unit.Name</h2>
+                <img src="/@unit.ImgUrl" alt="@unit.ImgUrl" height="100"/>
+                <div>Сотрудников: @unit.UniversityEmployees.Count</div>
+                <a href="/page/@unit.Id.ToString()">подробнее..</a>
+                @{
+                    PrintItems(unit.InverseParrentUnitNavigation.ToList());
+                }
+            </div>
+        }
+    }
 }
 
 <form method="get" action="/page" class="search-form">
@@ -15,14 +37,19 @@
 
 @foreach (UnivesityUnit div in Model)
 {
-    <div class="struct-block">
-        <form method="post" action="/api/page/@div.Id/delete" class="delete-form">
-            <button type="submit" class="delete-btn">x</button>
-        </form>
-        <h2>@div.Name</h2>
-        <img src="/@div.ImgUrl" alt="@div.ImgUrl" height="100"/>
-        <div>Сотрудников: @div.UniversityEmployees.Count</div>
-        <a href="/page/@div.Id.ToString()">подробнее..</a>
-    </div>
-    
+    @if (div.ParrentUnitNavigation == null)
+    {
+        <div class="struct-block">
+            <form method="post" action="/api/page/@div.Id/delete" class="delete-form">
+                <button type="submit" class="delete-btn">x</button>
+            </form>
+            <h2>@div.Name</h2>
+            <img src="/@div.ImgUrl" alt="@div.ImgUrl" height="100"/>
+            <div>Сотрудников: @div.UniversityEmployees.Count</div>
+            <a href="/page/@div.Id.ToString()">подробнее..</a>
+            @{
+                PrintItems(div.InverseParrentUnitNavigation.ToList());
+            }
+        </div>
+    }
 }
