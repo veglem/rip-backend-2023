@@ -1,0 +1,11 @@
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/bin/Debug/net7.0/WebApi.AppServices.Contracts.deps.json
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/bin/Debug/net7.0/WebApi.AppServices.Contracts.dll
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/bin/Debug/net7.0/WebApi.AppServices.Contracts.pdb
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/WebApi.AppServices.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/WebApi.AppServices.Contracts.AssemblyInfoInputs.cache
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/WebApi.AppServices.Contracts.AssemblyInfo.cs
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/WebApi.AppServices.Contracts.csproj.CoreCompileInputs.cache
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/WebApi.AppServices.Contracts.dll
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/refint/WebApi.AppServices.Contracts.dll
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/WebApi.AppServices.Contracts.pdb
+/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/Debug/net7.0/ref/WebApi.AppServices.Contracts.dll

@@ -1,0 +1,269 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.Host/WebApi.Host.csproj": {}
+  },
+  "projects": {
+    "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/WebApi.AppServices.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/WebApi.AppServices.Contracts.csproj",
+        "projectName": "WebApi.AppServices.Contracts",
+        "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/WebApi.AppServices.Contracts.csproj",
+        "packagesPath": "/Users/vzhur/.nuget/packages/",
+        "outputPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vzhur/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices/WebApi.AppServices.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices/WebApi.AppServices.csproj",
+        "projectName": "WebApi.AppServices",
+        "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices/WebApi.AppServices.csproj",
+        "packagesPath": "/Users/vzhur/.nuget/packages/",
+        "outputPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vzhur/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.DataAccess/WebApi.DataAccess.csproj": {
+                "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.DataAccess/WebApi.DataAccess.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.DataAccess/WebApi.DataAccess.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.DataAccess/WebApi.DataAccess.csproj",
+        "projectName": "WebApi.DataAccess",
+        "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.DataAccess/WebApi.DataAccess.csproj",
+        "packagesPath": "/Users/vzhur/.nuget/packages/",
+        "outputPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.DataAccess/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vzhur/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/WebApi.AppServices.Contracts.csproj": {
+                "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices.Contracts/WebApi.AppServices.Contracts.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Minio": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.Host/WebApi.Host.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.Host/WebApi.Host.csproj",
+        "projectName": "WebApi.Host",
+        "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.Host/WebApi.Host.csproj",
+        "packagesPath": "/Users/vzhur/.nuget/packages/",
+        "outputPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.Host/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vzhur/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices/WebApi.AppServices.csproj": {
+                "projectPath": "/Users/vzhur/RiderProjects/RIP_lab01/WebApi.AppServices/WebApi.AppServices.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Swashbuckle.AspNetCore.Swagger": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerGen": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerUI": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
