@@ -5,8 +5,8 @@ api/units/{int unitId}/update/ # PUT
 api/units/{int unitId}/delete/ # DELETE 
 api/units/create/ # POST
 api/units/{int unitId}/add_to_order/ # POST 
-path('api/units/{int unitId}/image/ # GET 
-path(api/units/{int unitId}/image/ # PUT
+api/units/{int unitId}/image/ # GET 
+api/units/{int unitId}/image/ # PUT
 
 # Набор методов для заявок
 api/orders/ # GET

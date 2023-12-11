@@ -1,4 +1,29 @@
 version: "3"
+
+x-minio-common: &minio-common
+  image: quay.io/minio/minio:RELEASE.2022-10-15T19-57-03Z # устанавливаем image
+  # команда которая выполняется при запуске контейнера
+  # --console-address ":9001" - указываем запустить консоль администратора на порту 9001
+  #  http://minio{1...4}/data{1...2}  - указывает ноде адреса других нод,
+  # чтобы они могли связаться между собой
+  # если сломается одна из нод,
+  # остальные ноды это поймут и будут предпринимать действия чтобы сохранить файлы
+  command: server --console-address ":9001" http://minio{1...4}/data{1...2}
+  environment: # env конфигурация, подробнее: https://github.com/KaymeKaydex/web-2022/tree/go-lab2/tutorials/lab2/golang#поговорим-про-переменные-окружения
+    MINIO_ACCESS_KEY: minio # пароль админа
+    MINIO_SECRET_KEY: minio124 # логин админа
+  expose:
+    - "9000" # открыть порты
+    - "9001"
+    # environment:
+    # MINIO_ROOT_USER: minioadmin
+    # MINIO_ROOT_PASSWORD: minioadmin
+  healthcheck: # проверка состояния работоспособности кластера происходит путем выполнения get запроса на http://localhost:9000/minio/health/live
+    test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+    interval: 30s
+    timeout: 20s
+    retries: 3
+
 services:
   webapi:
     build: .
@@ -7,6 +32,7 @@ services:
     depends_on:
       - "postgres"
     volumes:
+      - ./WebApi.Host/bin/Debug/net7.0/WebApi.Host.xml:/app/WebApi.Host.xml
       - ./WebApi.Host/appsettings.json:/app/appsettings.json
   postgres:
     image: postgres:latest
@@ -19,7 +45,57 @@ services:
       - PSQL:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  minio1:
+    <<: *minio-common
+    hostname: minio1 
+    volumes: 
+      - data1-1:/data1
+      - data1-2:/data2
+
+  minio2: 
+    <<: *minio-common
+    hostname: minio2
+    volumes:
+      - data2-1:/data1
+      - data2-2:/data2
+
+  minio3:
+    <<: *minio-common
+    hostname: minio3
+    volumes:
+      - data3-1:/data1
+      - data3-2:/data2
+
+  minio4:
+    <<: *minio-common
+    hostname: minio4
+    volumes:
+      - data4-1:/data1
+      - data4-2:/data2
+
+  nginx: 
+    image: nginx:1.19.2-alpine
+    hostname: nginx 
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9000:9000" 
+      - "9001:9001"  
+    depends_on:
+      - minio1
+      - minio2
+      - minio3
+      - minio4
+        
+
 
 volumes:
   PSQL:
-    
+  data1-1:
+  data1-2:
+  data2-1:
+  data2-2:
+  data3-1:
+  data3-2:
+  data4-1:
+  data4-2:

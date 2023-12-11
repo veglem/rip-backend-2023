@@ -7,8 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHandlers();
 builder.Services.AddRepositories();
 builder.Services.AddDatabase(builder.Configuration);
-builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
-builder.Services.AddSwaggerGen();
+builder.Services.AddS3(builder.Configuration);
+builder.Services.AddAuth();
+builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Error);
+builder.Services.AddSwaggerGen(options =>
+{
+    var basePath = AppContext.BaseDirectory;
+
+    var xmlPath = Path.Combine(basePath, "WebApi.Host.xml");
+    options.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 

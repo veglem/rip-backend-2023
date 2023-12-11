@@ -13,12 +13,9 @@ public class GetUnitResultConvertor
             ImgUrl = unit.ImgUrl,
             Name = unit.Name,
             IsDeleted = unit.IsDeleted,
-            ParrentUnitNavigation = unit.ParrentUnitNavigation is null
-                ? null
-                : FromDomaiModel(unit.ParrentUnitNavigation),
             ParrentUnit = unit.ParrentUnit,
-            InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation
-                .Select(FromDomaiModel).ToList()
+            Description = unit.Description,
+            InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation.Select(FromDomaiModel).ToList()
         };
     }
 }
