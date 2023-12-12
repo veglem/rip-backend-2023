@@ -27,7 +27,13 @@ app.UseSwaggerUI(config =>
     config.SwaggerEndpoint("v1/swagger.json", "webApi");
 });
 
+
+
 app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization(); 
 
 app.MapSwagger();
 

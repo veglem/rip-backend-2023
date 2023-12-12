@@ -63,10 +63,6 @@ public class AuthController : Controller
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults
             .AuthenticationScheme);
-
-        Console.WriteLine(
-            HttpContext.User.Identity.Name);
-        // Results.Redirect("/login");
     }
     
     /// <summary>

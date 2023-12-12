@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Encodings.Web;
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models.Request;
@@ -16,14 +17,16 @@ namespace WebApi.Controllers;
 public class UnitController : Controller
 {
     private IUnitHandler _unitHandler;
+    private IOrdersHandler _ordersHandler;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="unitHandler"></param>
-    public UnitController(IUnitHandler unitHandler)
+    public UnitController(IUnitHandler unitHandler, IOrdersHandler ordersHandler)
     {
         _unitHandler = unitHandler;
+        _ordersHandler = ordersHandler;
     }
 
     /// <summary>
@@ -197,6 +200,26 @@ public class UnitController : Controller
         
         await Results.Redirect("http://localhost:9000/" + HttpUtility.UrlPathEncode(unit.ImgUrl)).ExecuteAsync(HttpContext);
     }
-    
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPost("{id:int}/add_to_order")]
+    [Authorize(Roles = "user")]
+    public async Task<List<GetUnitResult>> AddUnitToOrder(
+        [FromRoute] int id,
+        CancellationToken cancellationToken)
+    {
+        if (User.Identity is null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
+        return await _ordersHandler.AddUnitToOrder(id, User.Identity.Name,
+            cancellationToken);
+    }
 }
