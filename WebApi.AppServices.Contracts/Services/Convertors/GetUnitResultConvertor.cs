@@ -1,11 +1,11 @@
 using WebApi.AppServices.Contracts.Models;
-using WebApi.AppServices.Models;
+using WebApi.AppServices.Contracts.Models.Responce;
 
 namespace WebApi.AppServices.Contracts.Services.Convertors;
 
 public class GetUnitResultConvertor
 {
-    public static GetUnitResult FromDomaiModel(UnivesityUnit unit)
+    public static GetUnitResult FromDomainModel(UnivesityUnit unit)
     {
         return new GetUnitResult()
         {
@@ -15,7 +15,7 @@ public class GetUnitResultConvertor
             IsDeleted = unit.IsDeleted,
             ParrentUnit = unit.ParrentUnit,
             Description = unit.Description,
-            InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation.Select(FromDomaiModel).ToList()
+            InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation.Select(FromDomainModel).ToList()
         };
     }
 }

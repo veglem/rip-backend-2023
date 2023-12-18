@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models.Request;
+using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Services.Validators;
-using WebApi.AppServices.Models;
 
 namespace WebApi.Controllers;
 
@@ -71,6 +71,7 @@ public class UnitController : Controller
     /// <param name="unit"></param>
     /// <returns></returns>
     [HttpPut("{id:int}/update")]
+    [Authorize(Roles = "moderator")]
     public async Task<GetUnitResult> UpdateUnit(
         CancellationToken cancellationToken,
         [FromRoute]int id,
@@ -104,6 +105,7 @@ public class UnitController : Controller
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("create")]
+    [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> AddNewUnit(
         CancellationToken cancellationToken)
     {
@@ -134,6 +136,7 @@ public class UnitController : Controller
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("all")]
+    [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> GetUniversityUnitsWithDeleted(
         CancellationToken cancellationToken)
     {
@@ -147,6 +150,7 @@ public class UnitController : Controller
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("{id:int}/delete")]
+    [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> LogicDeleteUnit(
         CancellationToken cancellationToken, 
         [FromRoute]int id)
@@ -172,6 +176,7 @@ public class UnitController : Controller
     /// <param name="id"></param>
     /// <param name="image"></param>
     [HttpPut("{id}/image")]
+    [Authorize(Roles = "moderator")]
     public async Task AddImage(
         CancellationToken cancellationToken,
         int id,
@@ -218,8 +223,20 @@ public class UnitController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
-        return await _ordersHandler.AddUnitToOrder(id, User.Identity.Name,
-            cancellationToken);
+
+        try
+        {
+            var result = await _ordersHandler.AddUnitToOrder(id,
+                User.Identity.Name,
+                cancellationToken);
+
+            return result;
+        }
+        catch (ArgumentNullException ex)
+        {
+            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+        }
+
+        return null;
     }
 }

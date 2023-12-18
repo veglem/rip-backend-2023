@@ -1,6 +1,6 @@
 using WebApi.AppServices.Contracts.Models;
 using WebApi.AppServices.Contracts.Models.Request;
-using WebApi.AppServices.Models;
+using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.DataAccess;
 
 namespace WebApi.AppServices.Contracts.Repositories;

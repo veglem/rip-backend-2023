@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.AppServices.Contracts.Models;
 using WebApi.AppServices.Contracts.Models.Request;
+using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Repositories;
 using WebApi.AppServices.Contracts.Services.Convertors;
-using WebApi.AppServices.Models;
 using WebApi.DataAccess;
 
 namespace WebApi.AppServices.Repositories;
@@ -31,7 +31,7 @@ public class UnitRepository : IUnitRepository
         
         
         return fromBase
-            .Select(u => GetUnitResultConvertor.FromDomaiModel(u))
+            .Select(u => GetUnitResultConvertor.FromDomainModel(u))
             .Where(u => u.ParrentUnit is null || !fromBase.Exists(un => un.Id == u.ParrentUnit))
             .ToList();
     }
@@ -46,7 +46,7 @@ public class UnitRepository : IUnitRepository
             return null;
         }
 
-        return GetUnitResultConvertor.FromDomaiModel(unit);
+        return GetUnitResultConvertor.FromDomainModel(unit);
     }
 
     public async Task<int> AddUnit(CancellationToken cancellationToken, NewUnit unit)
@@ -119,7 +119,7 @@ public class UnitRepository : IUnitRepository
         
         
         return fromBase
-            .Select(u => GetUnitResultConvertor.FromDomaiModel(u))
+            .Select(u => GetUnitResultConvertor.FromDomainModel(u))
             .Where(u => u.ParrentUnit is null || !fromBase.Exists(un => un.Id == u.ParrentUnit))
             .ToList();
     }

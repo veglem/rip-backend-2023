@@ -1,4 +1,4 @@
-namespace WebApi.AppServices.Models;
+namespace WebApi.AppServices.Contracts.Models.Responce;
 
 public class GetUnitResult
 {
