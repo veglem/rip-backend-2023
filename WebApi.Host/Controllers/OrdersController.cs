@@ -59,7 +59,7 @@ public class OrdersController : Controller
     [Authorize(Roles = "user")]
     public async Task<GetOrderResult> UpdateOrder(
         [FromBody] UpdateOrderRequest request,
-        [FromBody] int orderId,
+        [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
         if (User.Identity is null)
@@ -77,7 +77,7 @@ public class OrdersController : Controller
         }
         catch (ArgumentNullException ex)
         {
-            Results.BadRequest(ex.Message);
+            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
         }
 
         return null;
