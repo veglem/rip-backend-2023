@@ -3,13 +3,13 @@ using WebApi.AppServices.Contracts.Models;
 
 namespace WebApi.DataAccess;
 
-public partial class RectorOrdersDatabaseContext : DbContext
+public class RectorOrdersDatabaseContext : DbContext
 {
     public RectorOrdersDatabaseContext(DbContextOptions<RectorOrdersDatabaseContext> options)
         : base(options)
     {
     }
-
+    
     public DbSet<RectorOrder> RectorOrders { get; set; }
 
     public DbSet<Request> Requests { get; set; }
