@@ -4,6 +4,7 @@ using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Repositories;
 using WebApi.AppServices.Contracts.Services.Convertors;
+using WebApi.AppServices.Exceptions;
 using WebApi.DataAccess;
 
 namespace WebApi.AppServices.Repositories;
@@ -69,7 +70,7 @@ public class UnitRepository : IUnitRepository
 
         if (unitToUpdate is null)
         {
-            throw new ArgumentNullException(
+            throw new ResultException(
                 "подразделения с таким id не существует");
         }
 
@@ -102,7 +103,7 @@ public class UnitRepository : IUnitRepository
 
         if (!parrentKeys.Contains(unit.ParrentUnit))
         {
-            throw new ArgumentNullException(
+            throw new ResultException(
                 "родительского подразделения с таким id не существует");
         }
         
@@ -130,7 +131,7 @@ public class UnitRepository : IUnitRepository
 
         if (unit is null)
         {
-            throw new ArgumentNullException(
+            throw new ResultException(
                 "подразделения с таким id не существует");
         }
 

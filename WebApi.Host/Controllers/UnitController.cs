@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Encodings.Web;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,7 @@ using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Services.Validators;
+using WebApi.AppServices.Exceptions;
 
 namespace WebApi.Controllers;
 
@@ -48,6 +48,8 @@ public class UnitController : Controller
     /// <param name="cancellationToken"></param>
     /// <param name="id"></param>
     /// <returns></returns>
+    /// <response code="200">Успешное получение подразделения</response>
+    /// <response code="404">Искомый id не существует</response>
     [HttpGet("{id:int}")]
     public async Task<GetUnitResult> GetUniversityUnitById(
         CancellationToken cancellationToken, int id)
@@ -70,6 +72,8 @@ public class UnitController : Controller
     /// <param name="id"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
+    /// <response code="200">Успешное обновление подразделения</response>
+    /// <response code="400">Ошибка обновления</response>
     [HttpPut("{id:int}/update")]
     [Authorize(Roles = "moderator")]
     public async Task<GetUnitResult> UpdateUnit(
@@ -87,13 +91,14 @@ public class UnitController : Controller
             if (updetedUnit is null)
             {
                 await Results.BadRequest("ошибка обновления").ExecuteAsync(HttpContext);
+                return null;
             }
 
             return updetedUnit;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
         }
 
         return null;
@@ -104,6 +109,8 @@ public class UnitController : Controller
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <response code="200">Успешное добавление пустого подразделения</response>
+    /// <response code="400">Ошибка создания подразделения</response>
     [HttpPost("create")]
     [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> AddNewUnit(
@@ -123,7 +130,7 @@ public class UnitController : Controller
         }
         catch (ValidationException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
             return new List<GetUnitResult>();
         }
 
@@ -135,6 +142,7 @@ public class UnitController : Controller
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <response code="200">Успешное получение подразделений</response>
     [HttpGet("all")]
     [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> GetUniversityUnitsWithDeleted(
@@ -149,6 +157,8 @@ public class UnitController : Controller
     /// <param name="cancellationToken"></param>
     /// <param name="id"></param>
     /// <returns></returns>
+    /// <response code="200">Успешное удаление подразделения</response>
+    /// <response code="400">Ошибка удаления</response>
     [HttpDelete("{id:int}/delete")]
     [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> LogicDeleteUnit(
@@ -161,9 +171,9 @@ public class UnitController : Controller
 
             return await _unitHandler.GetUnits("", cancellationToken);
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
         }
 
         return null;
@@ -175,6 +185,8 @@ public class UnitController : Controller
     /// <param name="cancellationToken"></param>
     /// <param name="id"></param>
     /// <param name="image"></param>
+    /// <response code="200">Успешное обновление изображения</response>
+    /// <response code="400">Ошибка обновление изображения</response>
     [HttpPut("{id}/image")]
     [Authorize(Roles = "moderator")]
     public async Task AddImage(
@@ -185,14 +197,14 @@ public class UnitController : Controller
         try
         {
             await _unitHandler.AddImage(image.OpenReadStream(), id, cancellationToken);
-        } catch (ArgumentNullException ex)
+        } catch (ResultException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
         }
     }
 
     /// <summary>
-    /// 
+    /// Получение изображения подразделения
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <param name="id"></param>
@@ -207,11 +219,14 @@ public class UnitController : Controller
     }
 
     /// <summary>
-    /// 
+    /// Добавление подразделения к приказу
     /// </summary>
     /// <param name="id"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <response code="200">Успешное добавление подразделения</response>
+    /// <response code="400">Ошибка добавления</response>
+    /// <response code="403">Пользователь не авторизован</response>
     [HttpPost("{id:int}/add_to_order")]
     [Authorize(Roles = "user")]
     public async Task<List<GetUnitResult>> AddUnitToOrder(
@@ -232,9 +247,9 @@ public class UnitController : Controller
 
             return result;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
         }
 
         return null;

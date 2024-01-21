@@ -17,9 +17,9 @@ public class GetOrderResult
 
     public DateTime? EndDate { get; set; }
 
-    public User Creator { get; set; } = null!;
+    public string Creator { get; set; } = null!;
 
-    public User? Moderator { get; set; }
+    public string? Moderator { get; set; }
 
     public ICollection<int> Units { get; set; } =
         new List<int>();

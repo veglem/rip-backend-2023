@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
-using ArgumentNullException = System.ArgumentNullException;
+using WebApi.AppServices.Exceptions;
 
 namespace WebApi.Controllers;
 
@@ -17,6 +17,13 @@ public class OrdersController : Controller
         _ordersHandler = ordersHandler;
     }
 
+    /// <summary>
+    /// Возвращает все приказы пользователя
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное получение приказов</response>
+    /// <response code="403">Пользователь не авторизован</response>
     [HttpGet]
     [Authorize(Roles = "user, moderator")]
     public async Task<List<GetOrderResult>> GetAllOrders(CancellationToken cancellationToken)
@@ -30,6 +37,15 @@ public class OrdersController : Controller
         return await _ordersHandler.GetUserOrders(User.Identity.Name, cancellationToken);
     }
 
+    /// <summary>
+    /// Получение приказа по id
+    /// </summary>
+    /// <param name="orderId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное получение приказа</response>
+    /// <response code="400">Ошибка получения приказа</response>
+    /// <response code="403">Пользователь не авторизован</response>
     [HttpGet("{orderId:int}")]
     public async Task<GetOrderResult> GetOrderById(int orderId,
         CancellationToken cancellationToken)
@@ -47,14 +63,24 @@ public class OrdersController : Controller
 
             return result;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
         }
 
         return null;
     }
 
+    /// <summary>
+    /// Обновление приказа
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="orderId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное обновление приказа</response>
+    /// <response code="400">Ошибка обновления</response>
+    /// <response code="403">Пользователь не авторизован</response>
     [HttpPut("{orderId:int}/update")]
     [Authorize(Roles = "user")]
     public async Task<GetOrderResult> UpdateOrder(
@@ -75,14 +101,24 @@ public class OrdersController : Controller
 
             return order;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            await Results.BadRequest(ex.Message).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
         }
 
         return null;
     }
 
+    /// <summary>
+    /// Обновление статуса пользователем
+    /// </summary>
+    /// <param name="status"></param>
+    /// <param name="orderId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное добавление подразделения</response>
+    /// <response code="400">Ошибка обновления</response>
+    /// <response code="403">Пользователь не авторизован или пытается установить не верный статус</response>
     [HttpPut("{orderId:int}/update_status_user")]
     [Authorize(Roles = "user")]
     public async Task<GetOrderResult> UpdateStatusUser(
@@ -108,14 +144,24 @@ public class OrdersController : Controller
 
             return order;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            Results.BadRequest(ex.Message);
+            Results.BadRequest(new { Message = ex.Message});
         }
 
         return null;
     }
     
+    /// <summary>
+    /// Обновление статуса приказа модератором
+    /// </summary>
+    /// <param name="status"></param>
+    /// <param name="orderId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное обновление статуса</response>
+    /// <response code="400">Ошибка обновления</response>
+    /// <response code="403">Пользователь не авторизован или пытается установить не верный статус</response>
     [HttpPut("{orderId:int}/update_status_moderator")]
     [Authorize(Roles = "moderator")]
     public async Task<GetOrderResult> UpdateStatusAdmin(
@@ -141,14 +187,23 @@ public class OrdersController : Controller
 
             return order;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            Results.BadRequest(ex.Message);
+            Results.BadRequest(new { Message = ex.Message});
         }
 
         return null;
     }
     
+    /// <summary>
+    /// Удаление приказа
+    /// </summary>
+    /// <param name="orderId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное удаление приказа</response>
+    /// <response code="400">Ошибка удаления</response>
+    /// <response code="403">Пользователь не авторизован</response>
     [HttpDelete("{orderId:int}/delete")]
     [Authorize(Roles = "user, moderator")]
     public async Task<GetOrderResult> DeleteOder(
@@ -169,14 +224,24 @@ public class OrdersController : Controller
 
             return order;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            Results.BadRequest(ex.Message);
+            Results.BadRequest(new { Message = ex.Message});
         }
 
         return null;
     }
 
+    /// <summary>
+    /// Удаление подразделения из приказа
+    /// </summary>
+    /// <param name="orderId"></param>
+    /// <param name="unitId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Успешное удаление</response>
+    /// <response code="400">Ошибка удаления</response>
+    /// <response code="403">Пользователь не авторизован</response>
     [HttpDelete("{orderId:int}/delete_unit/{unitId}")]
     [Authorize(Roles = "user, moderator")]
     public async Task<GetOrderResult> DeleteUnitFromOrder(
@@ -198,9 +263,9 @@ public class OrdersController : Controller
 
             return order;
         }
-        catch (ArgumentNullException ex)
+        catch (ResultException ex)
         {
-            Results.BadRequest(ex.Message);
+            Results.BadRequest(new { Message = ex.Message});
         }
 
         return null;

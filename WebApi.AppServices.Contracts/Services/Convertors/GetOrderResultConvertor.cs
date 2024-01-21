@@ -15,8 +15,8 @@ public class GetOrderResultConvertor
             CreationDate = order.CreationDate,
             FormationDate = order.FormationDate,
             EndDate = order.EndDate,
-            Creator = order.Creator,
-            Moderator = order.Moderator,
+            Creator = order.Creator.Username,
+            Moderator = order.Moderator?.Username,
             Status = order.Status.Name,
             Units = order.Requests.Select(request =>
                 request.UnitId).ToList()

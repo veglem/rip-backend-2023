@@ -17,6 +17,12 @@ public class S3Context
         await _client.PutObjectAsync(args, cancellationToken);
     }
 
+    public async Task GetImage(GetObjectArgs args,
+        CancellationToken cancellationToken)
+    {
+        await _client.GetObjectAsync(args, cancellationToken);
+    }
+
     // public async Task<byte[]> GetImage(string name,
     //     CancellationToken cancellationToken)
     // {

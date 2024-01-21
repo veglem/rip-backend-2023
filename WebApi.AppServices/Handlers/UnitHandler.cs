@@ -3,6 +3,7 @@ using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Repositories;
 using WebApi.AppServices.Contracts.Services.Validators;
+using WebApi.AppServices.Exceptions;
 
 namespace WebApi.AppServices.Handlers;
 
@@ -63,7 +64,7 @@ public class UnitHandler : IUnitHandler
 
         if (unit is null)
         {
-            throw new ArgumentNullException("нет подразделения с таким id");
+            throw new ResultException("нет подразделения с таким id");
         }
         
         await _s3Repository.AddImage(image, unit.Name, cancellationToken);
@@ -77,10 +78,11 @@ public class UnitHandler : IUnitHandler
         await _unitRepository.UpdateUnit(cancellationToken, id, newUnit);
     }
 
-    // public async Task<byte[]> GetImage(int id, CancellationToken cancellationToken)
-    // {
-    //     var unit = await _unitRepository.GetUnitById(cancellationToken, id);
-    //     
-    //     
-    // }
+    public async Task<byte[]> GetImage(int id, CancellationToken cancellationToken)
+    {
+        var unit = await _unitRepository.GetUnitById(cancellationToken, id);
+        Console.WriteLine(unit.ImgUrl.Substring(unit.ImgUrl.IndexOf('/') + 1));
+        return await _s3Repository.GetImage(unit.ImgUrl.Substring(unit.ImgUrl.IndexOf('/') + 1),
+            cancellationToken);
+    }
 }

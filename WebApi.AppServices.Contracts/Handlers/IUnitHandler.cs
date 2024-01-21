@@ -31,5 +31,8 @@ public interface IUnitHandler
 
     public Task AddImage(Stream image, int id, CancellationToken cancellationToken);
 
+    public Task<byte[]> GetImage(int id,
+        CancellationToken cancellationToken);
+
     // public Task<byte[]> GetImage(int id, CancellationToken cancellationToken);
 }

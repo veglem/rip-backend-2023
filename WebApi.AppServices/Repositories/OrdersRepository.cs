@@ -4,6 +4,7 @@ using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Repositories;
 using WebApi.AppServices.Contracts.Services.Convertors;
+using WebApi.AppServices.Exceptions;
 using WebApi.DataAccess;
 
 namespace WebApi.AppServices.Repositories;
@@ -32,6 +33,8 @@ public class OrdersRepository : IOrdersRepository
                     order.Status.Name != "deleted")
                 .Include(order => order.Requests)
                 .Include(order => order.Status)
+                .Include(order => order.Creator)
+                .Include(order => order.Moderator)
                 .ToListAsync(cancellationToken);
 
             return moderRes;
@@ -42,6 +45,8 @@ public class OrdersRepository : IOrdersRepository
                             order.Status.Name != "deleted")
             .Include(order => order.Requests)
             .Include(order => order.Status)
+            .Include(order => order.Creator)
+            .Include(order => order.Moderator)
             .ToListAsync(cancellationToken);
 
         return result;
@@ -102,7 +107,7 @@ public class OrdersRepository : IOrdersRepository
 
             if (unit is null)
             {
-                throw new ArgumentNullException(
+                throw new ResultException(
                     $"Нет подразделения с id {unitId}");
             }
 
@@ -132,6 +137,8 @@ public class OrdersRepository : IOrdersRepository
             await _context.RectorOrders
                 .Include(order => order.Requests)
                 .Include(order => order.Status)
+                .Include(order => order.Creator)
+                .Include(order => order.Moderator)
                 .FirstOrDefaultAsync(order =>
                         order.Id == orderId &&
                         order.Creator.Username == username &&
@@ -140,7 +147,7 @@ public class OrdersRepository : IOrdersRepository
 
         if (order is null)
         {
-            throw new ArgumentNullException($"Нет приказа с id {orderId}");
+            throw new ResultException($"Нет приказа с id {orderId}");
         }
 
         return GetOrderResultConvertor.FromDomainModel(order);
@@ -153,6 +160,8 @@ public class OrdersRepository : IOrdersRepository
         RectorOrder? oreder = await _context.RectorOrders
             .Include(order => order.Requests)
             .Include(order => order.Status)
+            .Include(order => order.Creator)
+            .Include(order => order.Moderator)
             .FirstOrDefaultAsync(o => 
                     o.Id == orderId &&
                     (o.Creator.Username == username || 
@@ -162,7 +171,7 @@ public class OrdersRepository : IOrdersRepository
 
         if (oreder is null)
         {
-            throw new ArgumentNullException($"Нет приказа с id {orderId}");
+            throw new ResultException($"Нет приказа с id {orderId}");
         }
 
         if (request.Name is not null)
@@ -191,13 +200,15 @@ public class OrdersRepository : IOrdersRepository
 
         if (statusToSet is null)
         {
-            throw new ArgumentNullException($"Нет статуса с именем {status}");
+            throw new ResultException($"Нет статуса с именем {status}");
         }
 
         RectorOrder? order =
             await _context.RectorOrders
                 .Include(o => o.Requests)
                 .Include(o => o.Status)
+                .Include(order => order.Creator)
+                .Include(order => order.Moderator)
                 .FirstOrDefaultAsync(o =>
                         o.Id == orderId &&
                         (o.Creator.Username == username ||
@@ -208,7 +219,7 @@ public class OrdersRepository : IOrdersRepository
 
         if (order is null)
         {
-            throw new ArgumentNullException($"Нет приказа с id {orderId}");
+            throw new ResultException($"Нет приказа с id {orderId}");
         }
 
         if (statusToSet.Name == "formed")
@@ -216,6 +227,12 @@ public class OrdersRepository : IOrdersRepository
             User? moder = _context.Users.AsNoTracking()
                 .OrderBy(user => user.RectorOrderModerators.Count).Last(user => user.IsModerator);
             order.ModeratorId = moder.Id;
+            order.FormationDate = DateTime.Now;
+        }
+
+        if (statusToSet.Name == "completed" || statusToSet.Name == "rejected")
+        {
+            order.EndDate = DateTime.Now;
         }
 
         order.Status = statusToSet;
@@ -235,11 +252,13 @@ public class OrdersRepository : IOrdersRepository
                 o.Moderator.Username == username)
             .Include(o => o.Requests)
             .Include(o => o.Status)
+            .Include(order => order.Creator)
+            .Include(order => order.Moderator)
             .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
 
         if (order is null)
         {
-            throw new ArgumentNullException($"Нет приказа с id {orderId}");
+            throw new ResultException($"Нет приказа с id {orderId}");
         }
 
         Request? request = await _context.Requests.FirstOrDefaultAsync(r =>
@@ -248,7 +267,7 @@ public class OrdersRepository : IOrdersRepository
 
         if (request is null)
         {
-            throw new ArgumentNullException($"Нет приказа с id {orderId}");
+            throw new ResultException($"Нет приказа с id {orderId}");
         }
 
         _context.Requests.Remove(request);

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using WebApi.DataAccess;
 
-namespace WebApi.DataAccess;
+namespace WebApi.AppServices.Contracts.Models;
 
 public class User
 {
@@ -13,7 +12,11 @@ public class User
 
     public bool IsModerator { get; set; }
 
-    public ICollection<RectorOrder> RectorOrderCreators { get; } = new List<RectorOrder>();
+    public string? Fio { get; set; }
 
-    public ICollection<RectorOrder> RectorOrderModerators { get; } = new List<RectorOrder>();
+    public string ImageUrl { get; set; } = null!;
+
+    public virtual ICollection<RectorOrder> RectorOrderCreators { get; } = new List<RectorOrder>();
+
+    public virtual ICollection<RectorOrder> RectorOrderModerators { get; } = new List<RectorOrder>();
 }

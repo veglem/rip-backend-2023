@@ -3,7 +3,6 @@ using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.AppServices.Contracts.Repositories;
 using WebApi.AppServices.Contracts.Services.Convertors;
-using WebApi.DataAccess;
 
 namespace WebApi.AppServices.Handlers;
 
