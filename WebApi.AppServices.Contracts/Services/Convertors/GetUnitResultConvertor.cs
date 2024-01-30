@@ -13,9 +13,9 @@ public class GetUnitResultConvertor
             ImgUrl = unit.ImgUrl,
             Name = unit.Name,
             IsDeleted = unit.IsDeleted,
-            ParrentUnit = unit.ParrentUnit,
+            // ParrentUnit = unit.ParrentUnit,
             Description = unit.Description,
-            InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation.Select(FromDomainModel).ToList()
+            // InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation.Select(FromDomainModel).ToList()
         };
     }
 }

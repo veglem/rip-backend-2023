@@ -72,7 +72,7 @@ public class UnitHandler : IUnitHandler
         NewUnit newUnit = new NewUnit()
         {
             ImgUrl = "images/" + unit.Name + ".jpg",
-            ParrentUnit = unit.ParrentUnit
+            // ParrentUnit = unit.ParrentUnit
         };
 
         await _unitRepository.UpdateUnit(cancellationToken, id, newUnit);

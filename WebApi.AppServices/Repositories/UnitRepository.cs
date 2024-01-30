@@ -33,7 +33,7 @@ public class UnitRepository : IUnitRepository
         
         return fromBase
             .Select(u => GetUnitResultConvertor.FromDomainModel(u))
-            .Where(u => u.ParrentUnit is null || !fromBase.Exists(un => un.Id == u.ParrentUnit))
+            // .Where(u => u.ParrentUnit is null || !fromBase.Exists(un => un.Id == u.ParrentUnit))
             .ToList();
     }
 
@@ -96,16 +96,16 @@ public class UnitRepository : IUnitRepository
             unitToUpdate.ImgUrl = unit.ImgUrl;
         }
 
-        unitToUpdate.ParrentUnit = unit.ParrentUnit;
+        // unitToUpdate.ParrentUnit = unit.ParrentUnit;
 
-        List<int?> parrentKeys = await _context.UnivesityUnits
-            .Select(u => u.ParrentUnit).ToListAsync(cancellationToken);
-
-        if (!parrentKeys.Contains(unit.ParrentUnit))
-        {
-            throw new ResultException(
-                "родительского подразделения с таким id не существует");
-        }
+        // List<int?> parrentKeys = await _context.UnivesityUnits
+        //     .Select(u => u.ParrentUnit).ToListAsync(cancellationToken);
+        //
+        // if (!parrentKeys.Contains(unit.ParrentUnit))
+        // {
+        //     throw new ResultException(
+        //         "родительского подразделения с таким id не существует");
+        // }
         
         _context.Update(unitToUpdate);
 
@@ -121,7 +121,7 @@ public class UnitRepository : IUnitRepository
         
         return fromBase
             .Select(u => GetUnitResultConvertor.FromDomainModel(u))
-            .Where(u => u.ParrentUnit is null || !fromBase.Exists(un => un.Id == u.ParrentUnit))
+            // .Where(u => u.ParrentUnit is null || !fromBase.Exists(un => un.Id == u.ParrentUnit))
             .ToList();
     }
 

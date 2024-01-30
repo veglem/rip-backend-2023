@@ -1,9 +1,11 @@
 using System.Security.Claims;
+using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models;
 using WebApi.AppServices.Contracts.Models.Request;
@@ -20,9 +22,12 @@ public class AuthController : Controller
 {
     private IUserHandler _userHandler;
 
-    public AuthController(IUserHandler userHandler)
+    private readonly IDistributedCache _cache;
+
+    public AuthController(IUserHandler userHandler, IDistributedCache cache)
     {
         _userHandler = userHandler;
+        _cache = cache;
     }
     
     /// <summary>
@@ -67,8 +72,13 @@ public class AuthController : Controller
     [HttpPost("logout")]
     public async Task Logout(CancellationToken cancellationToken)
     {
+        _cache.SetStringAsync(HttpContext.Request.Cookies[".AspNetCore.Cookies"],
+            "true", cancellationToken);
+        
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults
             .AuthenticationScheme);
+        
+        return;
     }
     
     /// <summary>

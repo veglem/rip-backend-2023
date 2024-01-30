@@ -17,6 +17,17 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<RectorOrdersDatabaseContext>(options =>
             options.UseNpgsql(connectionString));
     }
+
+    public static void AddRedis(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddStackExchangeRedisCache(options =>
+        {
+            
+            options.Configuration =
+                configuration.GetSection("Redis")["ConnectionString"];
+        });
+    }
     
     public static void AddS3(
         this IServiceCollection services,
@@ -36,7 +47,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddAuthentication(CookieAuthenticationDefaults
             .AuthenticationScheme).AddCookie(options =>
-            options.LoginPath = "/api/auth/login");
+            {
+                options.LoginPath = "/api/auth/login";
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            }
+            );
         services.AddAuthorization();
     }
 }

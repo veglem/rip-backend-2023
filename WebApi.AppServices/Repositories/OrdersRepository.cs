@@ -120,11 +120,11 @@ public class OrdersRepository : IOrdersRepository
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        foreach (var request in order.Requests)
-        {
-            request.Unit.InverseParrentUnitNavigation =
-                new List<UnivesityUnit>();
-        }
+        // foreach (var request in order.Requests)
+        // {
+        //     request.Unit.InverseParrentUnitNavigation =
+        //         new List<UnivesityUnit>();
+        // }
 
         return order.Requests.Select(request =>
             GetUnitResultConvertor.FromDomainModel(request.Unit)).ToList();

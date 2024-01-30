@@ -110,14 +110,14 @@ public partial class RectorOrdersDatabaseContext : DbContext
 
             entity.ToTable("UnivesityUnit");
 
-            entity.HasIndex(e => e.ParrentUnit, "IX_UnivesityUnit_ParrentUnit");
+            // entity.HasIndex(e => e.ParrentUnit, "IX_UnivesityUnit_ParrentUnit");
 
             entity.Property(e => e.ImgUrl).HasMaxLength(100);
             entity.Property(e => e.Name).HasMaxLength(200);
 
-            entity.HasOne(d => d.ParrentUnitNavigation).WithMany(p => p.InverseParrentUnitNavigation)
-                .HasForeignKey(d => d.ParrentUnit)
-                .HasConstraintName("UnivesityUnit_UnivesityUnit_Id_fk");
+            // entity.HasOne(d => d.ParrentUnitNavigation).WithMany(p => p.InverseParrentUnitNavigation)
+            //     .HasForeignKey(d => d.ParrentUnit)
+                // .HasConstraintName("UnivesityUnit_UnivesityUnit_Id_fk");
         });
 
         modelBuilder.Entity<User>(entity =>

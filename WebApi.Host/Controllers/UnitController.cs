@@ -1,7 +1,7 @@
-using System.Net;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
@@ -18,15 +18,17 @@ public class UnitController : Controller
 {
     private IUnitHandler _unitHandler;
     private IOrdersHandler _ordersHandler;
+    private readonly IDistributedCache _cache;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="unitHandler"></param>
-    public UnitController(IUnitHandler unitHandler, IOrdersHandler ordersHandler)
+    public UnitController(IUnitHandler unitHandler, IOrdersHandler ordersHandler, IDistributedCache cache)
     {
         _unitHandler = unitHandler;
         _ordersHandler = ordersHandler;
+        _cache = cache;
     }
 
     /// <summary>
@@ -35,11 +37,24 @@ public class UnitController : Controller
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ICollection<GetUnitResult>> GetUniversityUnits(
+    public async Task<GetAllUnitsResult> GetUniversityUnits(
         CancellationToken cancellationToken,
         [FromQuery]string filter = "")
     {
-        return await _unitHandler.GetUnits(filter, cancellationToken);
+        GetAllUnitsResult res = new GetAllUnitsResult()
+        {
+            Units = await _unitHandler.GetUnits(filter, cancellationToken),
+            Draft = null
+        };
+        
+        if (User.Identity is not null)
+        {
+            var o = await _ordersHandler.GetUserOrders(User.Identity.Name, cancellationToken);
+
+            res.Draft = o.FirstOrDefault(order => order.Status == "draft")?.Id;
+        }
+        
+        return res;
     }
 
     /// <summary>
@@ -83,6 +98,13 @@ public class UnitController : Controller
     {
         try
         {
+            if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is null)
+            {
+                await Results.Forbid().ExecuteAsync(HttpContext);
+                return null;
+            }
+            
             await _unitHandler.UpdateUnit(cancellationToken, id, unit);
 
             GetUnitResult? updetedUnit =
@@ -116,6 +138,13 @@ public class UnitController : Controller
     public async Task<ICollection<GetUnitResult>> AddNewUnit(
         CancellationToken cancellationToken)
     {
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
         NewUnit unit = new NewUnit()
         {
             Name = "Имя по умолчанию",
@@ -148,6 +177,13 @@ public class UnitController : Controller
     public async Task<ICollection<GetUnitResult>> GetUniversityUnitsWithDeleted(
         CancellationToken cancellationToken)
     {
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
         return await _unitHandler.GetUnitsWithDeleted(cancellationToken);
     }
 
@@ -165,6 +201,13 @@ public class UnitController : Controller
         CancellationToken cancellationToken, 
         [FromRoute]int id)
     {
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
         try
         {
             await _unitHandler.UnitLogicDelete(cancellationToken, id);
@@ -194,6 +237,13 @@ public class UnitController : Controller
         int id,
         IFormFile image)
     {
+        if (await _cache.GetStringAsync(
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return;
+        }
+        
         try
         {
             await _unitHandler.AddImage(image.OpenReadStream(), id, cancellationToken);
@@ -215,7 +265,7 @@ public class UnitController : Controller
     {
         var unit = await _unitHandler.GetUnitById(cancellationToken, id);
         
-        await Results.Redirect("http://localhost:9000/" + HttpUtility.UrlPathEncode(unit.ImgUrl)).ExecuteAsync(HttpContext);
+        await Results.Redirect("http://loacalhost:9000/" + HttpUtility.UrlPathEncode(unit.ImgUrl)).ExecuteAsync(HttpContext);
     }
 
     /// <summary>
@@ -238,6 +288,13 @@ public class UnitController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
+        
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
 
         try
         {
@@ -255,3 +312,5 @@ public class UnitController : Controller
         return null;
     }
 }
+
+

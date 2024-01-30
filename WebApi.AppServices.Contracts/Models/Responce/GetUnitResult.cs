@@ -10,9 +10,9 @@ public class GetUnitResult
 
     public bool IsDeleted { get; set; }
 
-    public int? ParrentUnit { get; set; }
+    // public int? ParrentUnit { get; set; }
     
     public string? Description { get; set; }
 
-    public ICollection<GetUnitResult> InverseParrentUnitNavigation { get; set; } = new List<GetUnitResult>();
+    // public ICollection<GetUnitResult> InverseParrentUnitNavigation { get; set; } = new List<GetUnitResult>();
 }

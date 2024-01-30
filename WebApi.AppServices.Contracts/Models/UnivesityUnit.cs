@@ -12,13 +12,13 @@ public class UnivesityUnit
 
     public bool IsDeleted { get; set; }
 
-    public int? ParrentUnit { get; set; }
+    // public int? ParrentUnit { get; set; }
 
     public string? Description { get; set; }
 
-    public virtual ICollection<UnivesityUnit> InverseParrentUnitNavigation { get; set; } = new List<UnivesityUnit>();
+    // public virtual ICollection<UnivesityUnit> InverseParrentUnitNavigation { get; set; } = new List<UnivesityUnit>();
 
-    public virtual UnivesityUnit? ParrentUnitNavigation { get; set; }
+    // public virtual UnivesityUnit? ParrentUnitNavigation { get; set; }
 
     public virtual ICollection<DataAccess.Request> Requests { get; set; } = new List<DataAccess.Request>();
 

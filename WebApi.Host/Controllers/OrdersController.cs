@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using WebApi.AppServices.Contracts.Handlers;
 using WebApi.AppServices.Contracts.Models.Request;
 using WebApi.AppServices.Contracts.Models.Responce;
@@ -12,9 +13,12 @@ public class OrdersController : Controller
 {
     private IOrdersHandler _ordersHandler;
 
-    public OrdersController(IOrdersHandler ordersHandler)
+    private readonly IDistributedCache _cache;
+
+    public OrdersController(IOrdersHandler ordersHandler, IDistributedCache cache)
     {
         _ordersHandler = ordersHandler;
+        _cache = cache;
     }
 
     /// <summary>
@@ -34,6 +38,12 @@ public class OrdersController : Controller
             return null;
         }
 
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
         return await _ordersHandler.GetUserOrders(User.Identity.Name, cancellationToken);
     }
 
@@ -51,6 +61,13 @@ public class OrdersController : Controller
         CancellationToken cancellationToken)
     {
         if (User.Identity is null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
@@ -95,6 +112,13 @@ public class OrdersController : Controller
         }
         try
         {
+            if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+            {
+                await Results.Forbid().ExecuteAsync(HttpContext);
+                return null;
+            }
+            
             GetOrderResult order =
                 await _ordersHandler.UpdateOrder(orderId, User.Identity.Name, request,
                     cancellationToken);
@@ -131,6 +155,14 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
+        
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
         if (status != "draft" && status != "formed")
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
@@ -174,6 +206,14 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
+        
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
         if (status != "completed" && status != "rejected")
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
@@ -216,6 +256,13 @@ public class OrdersController : Controller
             return null;
         }
         
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
         try
         {
             GetOrderResult order =
@@ -250,6 +297,13 @@ public class OrdersController : Controller
         CancellationToken cancellationToken)
     {
         if (User.Identity is null)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return null;
+        }
+        
+        if (await _cache.GetStringAsync(
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
