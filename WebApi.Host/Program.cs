@@ -4,15 +4,8 @@ using WebApi.AppServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:5173");
-        });
-});
+// var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors();
 
 builder.Services.AddHandlers();
 builder.Services.AddRepositories();
@@ -20,7 +13,14 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddS3(builder.Configuration);
 builder.Services.AddAuth();
 builder.Services.AddRedis(builder.Configuration);
-builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Error);
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling =
+        ReferenceLoopHandling.Error);
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 builder.Services.AddSwaggerGen(options =>
 {
     var basePath = AppContext.BaseDirectory;
@@ -38,13 +38,21 @@ app.UseSwaggerUI(config =>
     config.SwaggerEndpoint("v1/swagger.json", "webApi");
 });
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(builder =>
+{
+    builder
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
+
+app.UseCookiePolicy();
 
 app.UseRouting();
 
 app.UseAuthentication();
 
-app.UseAuthorization(); 
+app.UseAuthorization();
 
 app.MapSwagger();
 

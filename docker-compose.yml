@@ -81,6 +81,7 @@ services:
     ports:
       - "9000:9000" 
       - "9001:9001"  
+      - "2022:2022"
     depends_on:
       - minio1
       - minio2
