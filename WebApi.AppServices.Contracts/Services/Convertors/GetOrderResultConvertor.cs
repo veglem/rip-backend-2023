@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using WebApi.AppServices.Contracts.Models.Responce;
 using WebApi.DataAccess;
 
@@ -7,7 +8,7 @@ public class GetOrderResultConvertor
 {
     public static GetOrderResult FromDomainModel(RectorOrder order)
     {
-        return new GetOrderResult()
+        GetOrderResult result = new GetOrderResult()
         {
             Id = order.Id,
             Name = order.Name,
@@ -17,9 +18,29 @@ public class GetOrderResultConvertor
             EndDate = order.EndDate,
             Creator = order.Creator.Username,
             Moderator = order.Moderator?.Username,
-            Status = order.Status.Name,
             Units = order.Requests.Select(request =>
                 request.UnitId).ToList()
         };
+
+        switch (order.Status.Name)
+        {
+            case "deleted":
+                result.Status = 5;
+                break;
+            case "draft":
+                result.Status = 1;
+                break;
+            case "formed":
+                result.Status = 2;
+                break;
+            case "completed":
+                result.Status = 3;
+                break;
+            case "rejected":
+                result.Status = 4;
+                break;
+        }
+        
+        return result;
     }
 }

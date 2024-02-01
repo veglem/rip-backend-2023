@@ -12,7 +12,7 @@ public class GetUnitResultConvertor
             Id = unit.Id,
             ImgUrl = unit.ImgUrl,
             Name = unit.Name,
-            IsDeleted = unit.IsDeleted,
+            Status = unit.IsDeleted ? 2 : 1,
             // ParrentUnit = unit.ParrentUnit,
             Description = unit.Description,
             // InverseParrentUnitNavigation = unit.InverseParrentUnitNavigation.Select(FromDomainModel).ToList()

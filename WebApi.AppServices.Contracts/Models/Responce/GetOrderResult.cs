@@ -24,5 +24,5 @@ public class GetOrderResult
     public ICollection<int> Units { get; set; } =
         new List<int>();
 
-    public string Status { get; set; } = null!;
+    public int Status { get; set; }
 }

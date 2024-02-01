@@ -8,7 +8,7 @@ public class GetUnitResult
 
     public string ImgUrl { get; set; } = null!;
 
-    public bool IsDeleted { get; set; }
+    public int Status { get; set; }
 
     // public int? ParrentUnit { get; set; }
     

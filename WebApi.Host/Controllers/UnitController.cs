@@ -51,7 +51,7 @@ public class UnitController : Controller
         {
             var o = await _ordersHandler.GetUserOrders(User.Identity.Name, cancellationToken);
 
-            res.Draft = o.FirstOrDefault(order => order.Status == "draft")?.Id;
+            res.Draft = o.FirstOrDefault(order => order.Status == 1)?.Id;
         }
         
         return res;
