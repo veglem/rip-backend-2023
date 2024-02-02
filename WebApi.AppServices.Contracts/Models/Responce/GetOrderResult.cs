@@ -21,8 +21,8 @@ public class GetOrderResult
 
     public string? Moderator { get; set; }
 
-    public ICollection<int> Units { get; set; } =
-        new List<int>();
+    public ICollection<GetUnitResult> Units { get; set; } =
+        new List<GetUnitResult>();
 
     public int Status { get; set; }
 }

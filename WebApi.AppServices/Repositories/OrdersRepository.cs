@@ -32,6 +32,7 @@ public class OrdersRepository : IOrdersRepository
                     order.Moderator.Username == username &&
                     order.Status.Name != "deleted")
                 .Include(order => order.Requests)
+                .ThenInclude(request => request.Unit)
                 .Include(order => order.Status)
                 .Include(order => order.Creator)
                 .Include(order => order.Moderator)
@@ -44,6 +45,7 @@ public class OrdersRepository : IOrdersRepository
             .Where(order => order.Creator.Username == username &&
                             order.Status.Name != "deleted")
             .Include(order => order.Requests)
+            .ThenInclude(request => request.Unit)
             .Include(order => order.Status)
             .Include(order => order.Creator)
             .Include(order => order.Moderator)
@@ -136,6 +138,7 @@ public class OrdersRepository : IOrdersRepository
         var order =
             await _context.RectorOrders
                 .Include(order => order.Requests)
+                .ThenInclude(request => request.Unit)
                 .Include(order => order.Status)
                 .Include(order => order.Creator)
                 .Include(order => order.Moderator)
@@ -159,6 +162,7 @@ public class OrdersRepository : IOrdersRepository
     {
         RectorOrder? oreder = await _context.RectorOrders
             .Include(order => order.Requests)
+            .ThenInclude(req => req.Unit)
             .Include(order => order.Status)
             .Include(order => order.Creator)
             .Include(order => order.Moderator)
@@ -206,6 +210,7 @@ public class OrdersRepository : IOrdersRepository
         RectorOrder? order =
             await _context.RectorOrders
                 .Include(o => o.Requests)
+                .ThenInclude(request => request.Unit)
                 .Include(o => o.Status)
                 .Include(order => order.Creator)
                 .Include(order => order.Moderator)
@@ -251,6 +256,7 @@ public class OrdersRepository : IOrdersRepository
             .Where(o => o.Creator.Username == username || o.Moderator != null &&
                 o.Moderator.Username == username)
             .Include(o => o.Requests)
+            .ThenInclude(request => request.Unit)
             .Include(o => o.Status)
             .Include(order => order.Creator)
             .Include(order => order.Moderator)

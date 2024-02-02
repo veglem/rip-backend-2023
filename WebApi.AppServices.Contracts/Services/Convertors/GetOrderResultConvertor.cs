@@ -19,7 +19,7 @@ public class GetOrderResultConvertor
             Creator = order.Creator.Username,
             Moderator = order.Moderator?.Username,
             Units = order.Requests.Select(request =>
-                request.UnitId).ToList()
+                GetUnitResultConvertor.FromDomainModel(request.Unit)).ToList()
         };
 
         switch (order.Status.Name)
