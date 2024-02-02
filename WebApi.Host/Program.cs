@@ -21,13 +21,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
-builder.Services.AddSwaggerGen(options =>
-{
-    var basePath = AppContext.BaseDirectory;
-
-    var xmlPath = Path.Combine(basePath, "WebApi.Host.xml");
-    options.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
