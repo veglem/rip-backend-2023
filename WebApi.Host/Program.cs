@@ -32,9 +32,9 @@ app.UseSwaggerUI(config =>
     config.SwaggerEndpoint("v1/swagger.json", "webApi");
 });
 
-app.UseCors(builder =>
+app.UseCors(b =>
 {
-    builder
+    b
         .AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod();

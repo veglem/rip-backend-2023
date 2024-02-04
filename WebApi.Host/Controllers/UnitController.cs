@@ -99,7 +99,7 @@ public class UnitController : Controller
         try
         {
             if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is null)
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
             {
                 await Results.Forbid().ExecuteAsync(HttpContext);
                 return null;
@@ -238,7 +238,7 @@ public class UnitController : Controller
         IFormFile image)
     {
         if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return;

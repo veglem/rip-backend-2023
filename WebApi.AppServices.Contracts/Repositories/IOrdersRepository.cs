@@ -29,4 +29,6 @@ public interface IOrdersRepository
         int unitId,
         string username,
         CancellationToken cancellationToken);
+
+    public Task UpdateSignature(int orderId, string signature);
 }

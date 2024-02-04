@@ -15,7 +15,8 @@ public class OrdersController : Controller
 
     private readonly IDistributedCache _cache;
 
-    public OrdersController(IOrdersHandler ordersHandler, IDistributedCache cache)
+    public OrdersController(IOrdersHandler ordersHandler,
+        IDistributedCache cache)
     {
         _ordersHandler = ordersHandler;
         _cache = cache;
@@ -24,13 +25,20 @@ public class OrdersController : Controller
     /// <summary>
     /// Возвращает все приказы пользователя
     /// </summary>
+    /// <param name="endDate"></param>
     /// <param name="cancellationToken"></param>
+    /// <param name="status"></param>
+    /// <param name="startDate"></param>
     /// <returns></returns>
     /// <response code="200">Успешное получение приказов</response>
     /// <response code="403">Пользователь не авторизован</response>
     [HttpGet]
     [Authorize(Roles = "user, moderator")]
-    public async Task<List<GetOrderResult>> GetAllOrders(CancellationToken cancellationToken)
+    public async Task<List<GetOrderResult>> GetAllOrders(
+        [FromQuery] int? status,
+        [FromQuery] DateOnly? startDate,
+        [FromQuery] DateOnly? endDate,
+        CancellationToken cancellationToken)
     {
         if (User.Identity is null)
         {
@@ -39,12 +47,42 @@ public class OrdersController : Controller
         }
 
         if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        return await _ordersHandler.GetUserOrders(User.Identity.Name, cancellationToken);
+
+        List<GetOrderResult> result =
+            (await _ordersHandler.GetUserOrders(User.Identity.Name,
+                cancellationToken)).Where(order => order.Status != 1).ToList();
+
+        if (status == -1)
+        {
+            status = null;
+        }
+
+        if (status is not null)
+        {
+            result = result.Where(order => order.Status == status).ToList();
+        }
+
+        if (startDate is not null)
+        {
+            result = result.Where(order =>
+                DateOnly.FromDateTime(order.FormationDate ??
+                                      DateTime.MinValue) >= startDate).ToList();
+        }
+
+        if (endDate is not null)
+        {
+            result = result.Where(order =>
+                DateOnly.FromDateTime(order.FormationDate ??
+                                      DateTime.MaxValue) <= endDate).ToList();
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -65,9 +103,10 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
@@ -82,7 +121,8 @@ public class OrdersController : Controller
         }
         catch (ResultException ex)
         {
-            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message })
+                .ExecuteAsync(HttpContext);
         }
 
         return null;
@@ -110,24 +150,28 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
+
         try
         {
             if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                    string.Empty, cancellationToken) is not null)
             {
                 await Results.Forbid().ExecuteAsync(HttpContext);
                 return null;
             }
-            
+
             GetOrderResult order =
-                await _ordersHandler.UpdateOrder(orderId, User.Identity.Name, request,
+                await _ordersHandler.UpdateOrder(orderId, User.Identity.Name,
+                    request,
                     cancellationToken);
 
             return order;
         }
         catch (ResultException ex)
         {
-            await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
+            await Results.BadRequest(new { Message = ex.Message })
+                .ExecuteAsync(HttpContext);
         }
 
         return null;
@@ -146,7 +190,6 @@ public class OrdersController : Controller
     [HttpPut("{orderId:int}/update_status_user")]
     [Authorize(Roles = "user")]
     public async Task<GetOrderResult> UpdateStatusUser(
-        [FromQuery] string status,
         [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
@@ -155,35 +198,41 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
-        if (status != "draft" && status != "formed")
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-        }
-        
+
+        HttpClient client = new HttpClient();
+        var resp = await client.PostAsJsonAsync("http://192.168.1.42:8080/calc_sig/",
+            new
+            {
+                orderid = orderId
+            }, cancellationToken);
+        Console.WriteLine(
+            $"{resp.StatusCode} | {await resp.Content.ReadAsStringAsync()}");
         try
         {
             GetOrderResult order =
-                await _ordersHandler.UpdateStatusUser(orderId, User.Identity.Name, status,
+                await _ordersHandler.UpdateStatusUser(orderId,
+                    User.Identity.Name, "formed",
                     cancellationToken);
 
             return order;
         }
         catch (ResultException ex)
         {
-            Results.BadRequest(new { Message = ex.Message});
+            Results.BadRequest(new { Message = ex.Message });
         }
+
 
         return null;
     }
-    
+
     /// <summary>
     /// Обновление статуса приказа модератором
     /// </summary>
@@ -197,7 +246,7 @@ public class OrdersController : Controller
     [HttpPut("{orderId:int}/update_status_moderator")]
     [Authorize(Roles = "moderator")]
     public async Task<GetOrderResult> UpdateStatusAdmin(
-        [FromQuery] string status,
+        [FromQuery] int status,
         [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
@@ -206,35 +255,49 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
-        if (status != "completed" && status != "rejected")
+
+        string strStatus = "";
+
+        if (status != 3 && status != 4)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
         }
-        
+
+        switch (status)
+        {
+            case 3:
+                strStatus = "completed";
+                break;
+            case 4:
+                strStatus = "rejected";
+                break;
+        }
+
         try
         {
             GetOrderResult order =
-                await _ordersHandler.UpdateStatusUser(orderId, User.Identity.Name, status,
+                await _ordersHandler.UpdateStatusUser(orderId,
+                    User.Identity.Name, strStatus,
                     cancellationToken);
 
             return order;
         }
         catch (ResultException ex)
         {
-            Results.BadRequest(new { Message = ex.Message});
+            Results.BadRequest(new { Message = ex.Message });
         }
 
         return null;
     }
-    
+
     /// <summary>
     /// Удаление приказа
     /// </summary>
@@ -255,25 +318,27 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         try
         {
             GetOrderResult order =
-                await _ordersHandler.UpdateStatusUser(orderId, User.Identity.Name, "deleted",
+                await _ordersHandler.UpdateStatusUser(orderId,
+                    User.Identity.Name, "deleted",
                     cancellationToken);
 
             return order;
         }
         catch (ResultException ex)
         {
-            Results.BadRequest(new { Message = ex.Message});
+            Results.BadRequest(new { Message = ex.Message });
         }
 
         return null;
@@ -301,27 +366,42 @@ public class OrdersController : Controller
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+                string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
             return null;
         }
-        
+
         try
         {
             GetOrderResult order =
-                await _ordersHandler.DeleteUnitFromOrder(orderId, unitId, User.Identity.Name,
+                await _ordersHandler.DeleteUnitFromOrder(orderId, unitId,
+                    User.Identity.Name,
                     cancellationToken);
 
             return order;
         }
         catch (ResultException ex)
         {
-            Results.BadRequest(new { Message = ex.Message});
+            Results.BadRequest(new { Message = ex.Message });
         }
 
         return null;
+    }
+
+    [HttpPut("{orderId}/update_signature/")]
+    public async Task AddSignature([FromRoute] int orderId,
+    [FromBody] SignatureRequest request)
+    {
+        if (request.AccessToken != 123)
+        {
+            await Results.Forbid().ExecuteAsync(HttpContext);
+            return;
+        }
+
+        await _ordersHandler.UpdateSignature(orderId, request.Signature);
     }
 }

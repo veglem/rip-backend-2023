@@ -282,4 +282,16 @@ public class OrdersRepository : IOrdersRepository
 
         return GetOrderResultConvertor.FromDomainModel(order);
     }
+
+    public async Task UpdateSignature(int orderId, string signature)
+    {
+        var order = await _context.RectorOrders.FindAsync(orderId);
+
+        if (order is not null)
+        {
+            order.OrderBody += signature;
+        }
+
+        await _context.SaveChangesAsync();
+    }
 }

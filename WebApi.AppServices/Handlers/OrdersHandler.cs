@@ -59,4 +59,9 @@ public class OrdersHandler : IOrdersHandler
     {
         return await _ordersRepository.DeleteUnitFromOrder(orderId, unitId, username, cancellationToken);
     }
+
+    public async Task UpdateSignature(int orderId, string signature)
+    {
+        await _ordersRepository.UpdateSignature(orderId, signature);
+    }
 }
