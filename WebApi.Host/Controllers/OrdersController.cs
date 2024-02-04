@@ -33,29 +33,29 @@ public class OrdersController : Controller
     /// <response code="200">Успешное получение приказов</response>
     /// <response code="403">Пользователь не авторизован</response>
     [HttpGet]
-    [Authorize(Roles = "user, moderator")]
+    // [Authorize(Roles = "user, moderator")]
     public async Task<List<GetOrderResult>> GetAllOrders(
         [FromQuery] int? status,
         [FromQuery] DateOnly? startDate,
         [FromQuery] DateOnly? endDate,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+        //         string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         List<GetOrderResult> result =
-            (await _ordersHandler.GetUserOrders(User.Identity.Name,
+            (await _ordersHandler.GetUserOrders("veglem",
                 cancellationToken)).Where(order => order.Status != 1).ToList();
 
         if (status == -1)
@@ -98,23 +98,23 @@ public class OrdersController : Controller
     public async Task<GetOrderResult> GetOrderById(int orderId,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+        //         string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         try
         {
-            var result = await _ordersHandler.GetOrderById(User.Identity.Name,
+            var result = await _ordersHandler.GetOrderById("veglem",
                 orderId, cancellationToken);
 
             return result;
@@ -139,30 +139,30 @@ public class OrdersController : Controller
     /// <response code="400">Ошибка обновления</response>
     /// <response code="403">Пользователь не авторизован</response>
     [HttpPut("{orderId:int}/update")]
-    [Authorize(Roles = "user")]
+    // [Authorize(Roles = "user")]
     public async Task<GetOrderResult> UpdateOrder(
         [FromBody] UpdateOrderRequest request,
         [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         try
         {
-            if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                    string.Empty, cancellationToken) is not null)
-            {
-                await Results.Forbid().ExecuteAsync(HttpContext);
-                return null;
-            }
+            // if (await _cache.GetStringAsync(
+            //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+            //         string.Empty, cancellationToken) is not null)
+            // {
+            //     await Results.Forbid().ExecuteAsync(HttpContext);
+            //     return null;
+            // }
 
             GetOrderResult order =
-                await _ordersHandler.UpdateOrder(orderId, User.Identity.Name,
+                await _ordersHandler.UpdateOrder(orderId, "veglem",
                     request,
                     cancellationToken);
 
@@ -188,24 +188,24 @@ public class OrdersController : Controller
     /// <response code="400">Ошибка обновления</response>
     /// <response code="403">Пользователь не авторизован или пытается установить не верный статус</response>
     [HttpPut("{orderId:int}/update_status_user")]
-    [Authorize(Roles = "user")]
+    // [Authorize(Roles = "user")]
     public async Task<GetOrderResult> UpdateStatusUser(
         [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+        //         string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         HttpClient client = new HttpClient();
         var resp = await client.PostAsJsonAsync("http://192.168.1.42:8080/calc_sig/",
@@ -219,7 +219,7 @@ public class OrdersController : Controller
         {
             GetOrderResult order =
                 await _ordersHandler.UpdateStatusUser(orderId,
-                    User.Identity.Name, "formed",
+                    "veglem", "formed",
                     cancellationToken);
 
             return order;
@@ -244,25 +244,25 @@ public class OrdersController : Controller
     /// <response code="400">Ошибка обновления</response>
     /// <response code="403">Пользователь не авторизован или пытается установить не верный статус</response>
     [HttpPut("{orderId:int}/update_status_moderator")]
-    [Authorize(Roles = "moderator")]
+    // [Authorize(Roles = "moderator")]
     public async Task<GetOrderResult> UpdateStatusAdmin(
         [FromQuery] int status,
         [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+        //         string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         string strStatus = "";
 
@@ -285,7 +285,7 @@ public class OrdersController : Controller
         {
             GetOrderResult order =
                 await _ordersHandler.UpdateStatusUser(orderId,
-                    User.Identity.Name, strStatus,
+                     "veglem", strStatus,
                     cancellationToken);
 
             return order;
@@ -308,30 +308,30 @@ public class OrdersController : Controller
     /// <response code="400">Ошибка удаления</response>
     /// <response code="403">Пользователь не авторизован</response>
     [HttpDelete("{orderId:int}/delete")]
-    [Authorize(Roles = "user, moderator")]
+    // [Authorize(Roles = "user, moderator")]
     public async Task<GetOrderResult> DeleteOder(
         [FromRoute] int orderId,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+        //         string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         try
         {
             GetOrderResult order =
                 await _ordersHandler.UpdateStatusUser(orderId,
-                    User.Identity.Name, "deleted",
+                    "veglem", "deleted",
                     cancellationToken);
 
             return order;
@@ -355,31 +355,31 @@ public class OrdersController : Controller
     /// <response code="400">Ошибка удаления</response>
     /// <response code="403">Пользователь не авторизован</response>
     [HttpDelete("{orderId:int}/delete_unit/{unitId}")]
-    [Authorize(Roles = "user, moderator")]
+    // [Authorize(Roles = "user, moderator")]
     public async Task<GetOrderResult> DeleteUnitFromOrder(
         [FromRoute] int orderId,
         [FromRoute] int unitId,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
-                string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ??
+        //         string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         try
         {
             GetOrderResult order =
                 await _ordersHandler.DeleteUnitFromOrder(orderId, unitId,
-                    User.Identity.Name,
+                    "veglem",
                     cancellationToken);
 
             return order;

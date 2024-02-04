@@ -47,12 +47,11 @@ public class UnitController : Controller
             Draft = null
         };
         
-        if (User.Identity is not null)
-        {
-            var o = await _ordersHandler.GetUserOrders(User.Identity.Name, cancellationToken);
+        
+            var o = await _ordersHandler.GetUserOrders("veglem", cancellationToken);
 
             res.Draft = o.FirstOrDefault(order => order.Status == 1)?.Id;
-        }
+        
         
         return res;
     }
@@ -90,7 +89,7 @@ public class UnitController : Controller
     /// <response code="200">Успешное обновление подразделения</response>
     /// <response code="400">Ошибка обновления</response>
     [HttpPut("{id:int}/update")]
-    [Authorize(Roles = "moderator")]
+    // [Authorize(Roles = "moderator")]
     public async Task<GetUnitResult> UpdateUnit(
         CancellationToken cancellationToken,
         [FromRoute]int id,
@@ -98,12 +97,12 @@ public class UnitController : Controller
     {
         try
         {
-            if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
-            {
-                await Results.Forbid().ExecuteAsync(HttpContext);
-                return null;
-            }
+            // if (await _cache.GetStringAsync(
+            //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+            // {
+            //     await Results.Forbid().ExecuteAsync(HttpContext);
+            //     return null;
+            // }
             
             await _unitHandler.UpdateUnit(cancellationToken, id, unit);
 
@@ -134,16 +133,16 @@ public class UnitController : Controller
     /// <response code="200">Успешное добавление пустого подразделения</response>
     /// <response code="400">Ошибка создания подразделения</response>
     [HttpPost("create")]
-    [Authorize(Roles = "moderator")]
+    // [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> AddNewUnit(
         CancellationToken cancellationToken)
     {
-        if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (await _cache.GetStringAsync(
+        //             HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
         
         NewUnit unit = new NewUnit()
         {
@@ -173,16 +172,16 @@ public class UnitController : Controller
     /// <returns></returns>
     /// <response code="200">Успешное получение подразделений</response>
     [HttpGet("all")]
-    [Authorize(Roles = "moderator")]
+    // [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> GetUniversityUnitsWithDeleted(
         CancellationToken cancellationToken)
     {
-        if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (await _cache.GetStringAsync(
+        //             HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
         
         return await _unitHandler.GetUnitsWithDeleted(cancellationToken);
     }
@@ -196,17 +195,17 @@ public class UnitController : Controller
     /// <response code="200">Успешное удаление подразделения</response>
     /// <response code="400">Ошибка удаления</response>
     [HttpDelete("{id:int}/delete")]
-    [Authorize(Roles = "moderator")]
+    // [Authorize(Roles = "moderator")]
     public async Task<ICollection<GetUnitResult>> LogicDeleteUnit(
         CancellationToken cancellationToken, 
         [FromRoute]int id)
     {
-        if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (await _cache.GetStringAsync(
+        //             HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
         
         try
         {
@@ -231,18 +230,18 @@ public class UnitController : Controller
     /// <response code="200">Успешное обновление изображения</response>
     /// <response code="400">Ошибка обновление изображения</response>
     [HttpPut("{id}/image")]
-    [Authorize(Roles = "moderator")]
+    // [Authorize(Roles = "moderator")]
     public async Task AddImage(
         CancellationToken cancellationToken,
         int id,
         IFormFile image)
     {
-        if (await _cache.GetStringAsync(
-                HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return;
-        }
+        // if (await _cache.GetStringAsync(
+        //         HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return;
+        // }
         
         try
         {
@@ -278,28 +277,28 @@ public class UnitController : Controller
     /// <response code="400">Ошибка добавления</response>
     /// <response code="403">Пользователь не авторизован</response>
     [HttpPost("{id:int}/add_to_order")]
-    [Authorize(Roles = "user")]
+    // [Authorize(Roles = "user")]
     public async Task<List<GetUnitResult>> AddUnitToOrder(
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        if (User.Identity is null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
-        
-        if (await _cache.GetStringAsync(
-                    HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
-        {
-            await Results.Forbid().ExecuteAsync(HttpContext);
-            return null;
-        }
+        // if (User.Identity is null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
+        //
+        // if (await _cache.GetStringAsync(
+        //             HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
+        // {
+        //     await Results.Forbid().ExecuteAsync(HttpContext);
+        //     return null;
+        // }
 
         try
         {
             var result = await _ordersHandler.AddUnitToOrder(id,
-                User.Identity.Name,
+                "veglem",
                 cancellationToken);
 
             return result;
