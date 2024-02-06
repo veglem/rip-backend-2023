@@ -149,7 +149,7 @@ public class UnitController : Controller
         {
             Name = "Имя по умолчанию",
             Description = "Описание по умолчанию",
-            ImgUrl = "images/default",
+            ImgUrl = "images/default.png",
             IsDeleted = true
         };
 
@@ -279,7 +279,7 @@ public class UnitController : Controller
     /// <response code="403">Пользователь не авторизован</response>
     [HttpPost("{id:int}/add_to_order")]
     [Authorize(Roles = "user")]
-    public async Task<List<GetUnitResult>> AddUnitToOrder(
+    public async Task<GetUnitResult> AddUnitToOrder(
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {

@@ -62,7 +62,7 @@ public class OrdersRepository : IOrdersRepository
         return e.Entity;
     }
 
-    public async Task<List<GetUnitResult>> AddUnitToOrder(string username,
+    public async Task<GetUnitResult> AddUnitToOrder(string username,
         int unitId,
         CancellationToken cancellationToken)
     {
@@ -128,8 +128,9 @@ public class OrdersRepository : IOrdersRepository
         //         new List<UnivesityUnit>();
         // }
 
-        return order.Requests.Select(request =>
-            GetUnitResultConvertor.FromDomainModel(request.Unit)).ToList();
+        return GetUnitResultConvertor.FromDomainModel(
+            await _context.UnivesityUnits.FirstOrDefaultAsync(unit =>
+                unit.Id == unitId));
     }
 
     public async Task<GetOrderResult> GetOrderById(string username, int orderId,

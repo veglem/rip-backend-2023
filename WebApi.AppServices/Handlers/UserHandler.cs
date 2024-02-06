@@ -59,4 +59,10 @@ public class UserHandler : IUserHandler
             $"images/{username + user.GetHashCode()}.jpg", 
             cancellationToken);
     }
+
+    public async Task<UserCredentials?> GetUserCreds(string username,
+        CancellationToken cancellationToken)
+    {
+        return await _userRepository.GetUserCreds(username, cancellationToken);
+    }
 }

@@ -24,4 +24,7 @@ public interface IUserRepository
     
     public Task UpdateImage(string username, string imgPath,
         CancellationToken cancellationToken);
+
+    public Task<UserCredentials?> GetUserCreds(string username,
+        CancellationToken cancellationToken);
 }

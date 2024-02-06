@@ -29,5 +29,6 @@ public interface IUserHandler
     public Task AddImageProfile(Stream image, string username,
         CancellationToken cancellationToken);
 
-    
+    public Task<UserCredentials?> GetUserCreds(string username,
+        CancellationToken cancellationToken);
 }

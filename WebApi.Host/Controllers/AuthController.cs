@@ -126,6 +126,18 @@ public class AuthController : Controller
         {
             await _userHandler.UpdateUserInfo(User.Identity.Name, info,
                 cancellationToken);
+
+            if (info.Username != User.Identity.Name && info.Username is not null)
+            {
+                UserCredentials? creds = await _userHandler.GetUserCreds(info.Username, cancellationToken);
+
+                await Logout(cancellationToken);
+                
+                if (creds is not null)
+                {
+                    await Login(creds, cancellationToken);
+                }
+            }
         }
         catch (ResultException ex)
         {

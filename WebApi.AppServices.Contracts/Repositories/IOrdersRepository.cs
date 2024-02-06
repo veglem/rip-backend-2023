@@ -12,7 +12,7 @@ public interface IOrdersRepository
     public Task<RectorOrder> AddNewOrder(RectorOrder order,
         CancellationToken cancellationToken);
     
-    public Task<List<GetUnitResult>> AddUnitToOrder(string username, int unitId,
+    public Task<GetUnitResult> AddUnitToOrder(string username, int unitId,
         CancellationToken cancellationToken);
 
     public Task<GetOrderResult> GetOrderById(string username, int orderId,

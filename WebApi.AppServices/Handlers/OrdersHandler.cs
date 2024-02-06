@@ -17,7 +17,7 @@ public class OrdersHandler : IOrdersHandler
         _unitRepository = unitRepository;
     }
 
-    public async Task<List<GetUnitResult>> AddUnitToOrder(
+    public async Task<GetUnitResult> AddUnitToOrder(
         int unitId,
         string username,
         CancellationToken cancellationToken)

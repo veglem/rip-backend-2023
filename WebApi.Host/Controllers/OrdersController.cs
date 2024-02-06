@@ -207,14 +207,23 @@ public class OrdersController : Controller
             return null;
         }
 
-        HttpClient client = new HttpClient();
-        var resp = await client.PostAsJsonAsync("http://192.168.1.42:8080/calc_sig/",
-            new
-            {
-                orderid = orderId
-            }, cancellationToken);
-        Console.WriteLine(
-            $"{resp.StatusCode} | {await resp.Content.ReadAsStringAsync()}");
+        try
+        {
+            HttpClient client = new HttpClient();
+            var resp = await client.PostAsJsonAsync(
+                "http://192.168.43.44:8080/calc_sig/",
+                new
+                {
+                    orderid = orderId
+                }, cancellationToken);
+            Console.WriteLine(
+                $"{resp.StatusCode} | {await resp.Content.ReadAsStringAsync()}");
+        }
+        catch
+        {
+            
+        }
+        
         try
         {
             GetOrderResult order =

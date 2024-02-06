@@ -143,4 +143,21 @@ public class UserRepository : IUserRepository
 
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<UserCredentials?> GetUserCreds(string username, CancellationToken cancellationToken)
+    {
+        User? user = await _context.Users.FirstOrDefaultAsync(user => user.Username == username, cancellationToken);
+
+        if (user is not null)
+        {
+            UserCredentials credentials = new UserCredentials()
+            {
+                Username = user.Username,
+                Password = user.Passord
+            };
+            return credentials;
+        }
+
+        return null;
+    }
 }

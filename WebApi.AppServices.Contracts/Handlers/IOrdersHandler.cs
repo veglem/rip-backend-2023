@@ -5,7 +5,7 @@ namespace WebApi.AppServices.Contracts.Handlers;
 
 public interface IOrdersHandler
 {
-    public Task<List<GetUnitResult>> AddUnitToOrder(int unitId, string username,
+    public Task<GetUnitResult> AddUnitToOrder(int unitId, string username,
         CancellationToken cancellationToken);
 
     public Task<List<GetOrderResult>> GetUserOrders(string username,
