@@ -16,6 +16,8 @@ public class GetOrderResult
     public DateTime? FormationDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+    
+    public string? Sign { get; set; }
 
     public string Creator { get; set; } = null!;
 

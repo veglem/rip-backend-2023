@@ -290,7 +290,7 @@ public class OrdersRepository : IOrdersRepository
 
         if (order is not null)
         {
-            order.OrderBody += signature;
+            order.Sign = signature;
         }
 
         await _context.SaveChangesAsync();

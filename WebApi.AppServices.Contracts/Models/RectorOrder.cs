@@ -19,6 +19,8 @@ public class RectorOrder
     public DateTime? FormationDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+    
+    public string? Sign { get; set; }
 
     public int? ModeratorId { get; set; }
 

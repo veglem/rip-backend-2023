@@ -173,24 +173,34 @@ public class AuthController : Controller
 
     [HttpPut("image")]
     [Authorize]
-    public async Task UpdateImage(
+    public async Task<UserImageResult> UpdateImage(
         CancellationToken cancellationToken,
         IFormFile image)
     {
         if (User.Identity is null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
-            return;
+            return null;
         }
 
         try
         {
             await _userHandler.AddImageProfile(image.OpenReadStream(),
                 User.Identity.Name, cancellationToken);
+
+            var userInfo = await GetUserInfo(cancellationToken);
+
+            UserImageResult res = new UserImageResult()
+            {
+                ImageUrl = userInfo.ImageUrl
+            };
+
+            return res;
         }
         catch (ResultException ex)
         {
             Results.BadRequest(new { Message = ex.Message});
+            return null;
         }
     }
 

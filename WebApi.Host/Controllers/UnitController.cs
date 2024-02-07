@@ -232,7 +232,7 @@ public class UnitController : Controller
     /// <response code="400">Ошибка обновление изображения</response>
     [HttpPut("{id}/image")]
     [Authorize(Roles = "moderator")]
-    public async Task AddImage(
+    public async Task<UserImageResult> AddImage(
         CancellationToken cancellationToken,
         int id,
         IFormFile image)
@@ -241,15 +241,24 @@ public class UnitController : Controller
                 HttpContext.Request.Cookies[".AspNetCore.Cookies"] ?? string.Empty, cancellationToken) is not null)
         {
             await Results.Forbid().ExecuteAsync(HttpContext);
-            return;
+            return null;
         }
         
         try
         {
             await _unitHandler.AddImage(image.OpenReadStream(), id, cancellationToken);
+
+            var unit = await GetUniversityUnitById(cancellationToken, id);
+
+            UserImageResult res = new UserImageResult()
+            {
+                ImageUrl = unit.ImgUrl
+            };
+            return res;
         } catch (ResultException ex)
         {
             await Results.BadRequest(new { Message = ex.Message}).ExecuteAsync(HttpContext);
+            return null;
         }
     }
 

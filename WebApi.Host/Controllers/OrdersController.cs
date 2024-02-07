@@ -211,7 +211,7 @@ public class OrdersController : Controller
         {
             HttpClient client = new HttpClient();
             var resp = await client.PostAsJsonAsync(
-                "http://192.168.43.44:8080/calc_sig/",
+                "http://172.16.89.94:8080/calc_sig/",
                 new
                 {
                     orderid = orderId
